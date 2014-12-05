@@ -3,16 +3,6 @@
     src: url(../font/Mastoc.ttf);
 }
 
-@font-face {
-    font-family: 'LemonMilk';
-    src: url(../font/LemonMilk.otf);
-}
-
-@font-face {
-    font-family: 'Libertine';
-    src: url(../font/Libertine.ttf);
-}
-
 body {
     background-color: #1EBAA4;
     font-family: 'Mastoc';
