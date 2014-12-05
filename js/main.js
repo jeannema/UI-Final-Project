@@ -1,6 +1,4 @@
 // main.js
-var currLat, currLong;
-
 $( document ).ready(function(){
 
     // initialize map
