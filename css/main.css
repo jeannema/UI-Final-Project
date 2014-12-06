@@ -54,3 +54,7 @@ html, body {
     cursor: pointer;
     opacity: 0.7;
 }
+
+.header-placeholder{
+    height: 50px;
+}

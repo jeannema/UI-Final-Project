@@ -1,7 +1,10 @@
 // main.js
 
-$( document ).ready(function(){
-
+$(document).ready(function(){
+    $("#searchLink").click(function(){
+        showModal();  
+    });
+    
     // initialize map
     var mapOptions = {
         zoom: 13,
