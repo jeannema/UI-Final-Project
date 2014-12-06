@@ -57,8 +57,8 @@ html, body {
     height: 40px;
     width: 40px;
     position: absolute;
-    top: -20px;
-    right: -24px;
+    top: 10px;
+    right: 10px;
 }
 #searchIcon{
     height: 50px;
