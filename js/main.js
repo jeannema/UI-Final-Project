@@ -1,4 +1,5 @@
 // main.js
+
 $( document ).ready(function(){
 
     // initialize map
@@ -22,3 +23,18 @@ $( document ).ready(function(){
         icon: 'img/seas.png'
     });
 });
+
+
+// show search modal
+function showModal() {
+    $("#modal").fadeIn("fast");
+    $("#modalWindow").fadeIn("fast");
+}
+
+// hide search modal, and reset all fields in modal
+function closeModal(){
+    $("#modal").fadeOut("fast");
+    $("#modalWindow").fadeOut("fast");
+
+}
+    

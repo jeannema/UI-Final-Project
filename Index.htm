@@ -1,18 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Simple Map</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpvdvAxAYCePQxww6C6qeGbNIVc9OOX3Y"></script>
-    <script type='text/javascript' src='js/main.js'></script>
-   
-  </head>
-  <body>
-    <div id="map-canvas"></div>
-  </body>
+    <head>
+        <title>Simple Map</title>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpvdvAxAYCePQxww6C6qeGbNIVc9OOX3Y"></script>
+        <script type='text/javascript' src='js/main.js'></script>
+        <script type='text/javascript' src='js/bootstrap.min.js'></script>
+    </head>
+    <body>
+        
+        <div id="modalWindow" style="display:none"></div>
+            <div id="modal" style="display:none">
+                <h1>Search</h1>
+                <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
+            </div>
+      
+        <div class="navbar-fixed-top" role="navigation">
+            <img src="img/search.svg" id="searchIcon" onclick="showModal()"/>
+        </div>
+        
+        <div id="map-canvas"></div>
+    </body>
 </html>

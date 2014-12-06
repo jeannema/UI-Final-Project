@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'Mastoc';
-    src: url(../font/Mastoc.ttf);
+    src: url(../fonts/Mastoc.ttf);
 }
 
 html, body {
@@ -10,6 +10,47 @@ html, body {
 
 #map-canvas {
     height: 100%;
-//    height: 350px;
-//    width: 350px;
+}
+
+#modalWindow {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width:100%;
+    height:100%;
+    text-align:center;
+    z-index: 500;
+    background-color: #ffffff;
+    opacity: 0.8;
+}
+
+#modal {
+    position: fixed;
+    top: 100px;
+    width: 50%;
+    height: 50%;
+    left: 50%;
+    margin: 0 0 0 -27.7%;
+    background-color: #ffffff;
+    border:5px solid #ffffff;
+    border-radius: 15px;
+    padding:15px;
+    text-align:center;
+    z-index: 1000;
+    font-family: 'Mastoc';
+}
+
+#closeIcon{
+    height: 25px;
+    width: 25px;
+}
+
+#searchIcon{
+    height: 50px;
+    width: 50px;
+}
+
+#searchIcon:hover, #closeIcon:hover{
+    cursor: pointer;
+    opacity: 0.7;
 }
