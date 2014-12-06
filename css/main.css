@@ -114,3 +114,16 @@ html, body {
 .header-placeholder{
     height: 50px;
 }
+
+#infoWindow{
+    position: fixed;
+    right: 15px;
+    top: 80px;
+    width:20%;
+    height:86%;
+    text-align:center;
+    z-index: 500;
+    background-color: #ffffff;
+    opacity: 0.9;
+    border-radius: 15px;
+}
