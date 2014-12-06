@@ -8,10 +8,7 @@ html, body {
     margin: 0px;
 }
 
-#map-canvas {
-    height: 100%;
-}
-
+/* modal styles */
 #modalWindow {
     position: fixed;
     left: 0px;
@@ -24,11 +21,8 @@ html, body {
     opacity: 0.8;
 }
 
-#modal {
+.modalPopup {
     position: fixed;
-    top: 100px;
-    width: 50%;
-    height: 50%;
     left: 50%;
     margin: 0 0 0 -27.7%;
     background-color: #ffffff;
@@ -37,22 +31,84 @@ html, body {
     padding:15px;
     text-align:center;
     z-index: 1000;
-    font-family: 'Mastoc';
 }
 
+#searchModal{
+    width: 50%;
+    height: 47%;
+    top: 24%;   
+}
+
+/* Elisha: change size/positioning of event and profile modals here*/
+#eventModal{
+    width: 50%;
+    height: 47%;
+    top: 24%;   
+}
+
+#profileModal{
+    width: 50%;
+    height: 47%;
+    top: 24%;   
+}
+
+/* icon styles*/
 #closeIcon{
-    height: 25px;
-    width: 25px;
+    height: 40px;
+    width: 40px;
+    position: absolute;
+    top: -20px;
+    right: -24px;
 }
-
 #searchIcon{
     height: 50px;
     width: 50px;
 }
 
-#searchIcon:hover, #closeIcon:hover{
+#searchIcon:hover, #closeIcon:hover, #arrow:hover{
     cursor: pointer;
     opacity: 0.7;
+}
+
+/* search modal styles*/
+#toggleAdvancedSearch:hover{
+    background-color: rgba(256, 256, 256, 0.3);
+}
+
+.searchField{
+    width: 400px;
+    height: 30px; 
+    margin-bottom: 10px;
+    font-size: 20px; 
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-bottom: 3px solid black;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.checkboxSearch{
+    margin-bottom: 10px;
+    font-size: 20px; 
+    border: 0;
+    outline: 0;
+    background: transparent;
+    margin: 10px;
+}
+
+.dropdownSearch{
+    color: #B0B0B0;
+    -webkit-appearance: menulist-button;
+}
+
+#searchButton{
+    margin-top: 15px;
+}
+
+/* misc styles */
+#map-canvas {
+    height: 100%;
 }
 
 .header-placeholder{

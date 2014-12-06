@@ -12,18 +12,6 @@
         <script type='text/javascript' src='js/bootstrap.min.js'></script>
     </head>
     <body>
-        
-        <div id="modalWindow" style="display:none"></div>
-            <div id="modal" style="display:none">
-                <h1>Search</h1>
-                <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
-            </div>
-      
-        
-        <div class="navbar-fixed-top" role="navigation">
-            <img src="img/search.svg" id="searchIcon" onclick="showModal()"/>
-        </div>
-        
         <div class="header-placeholder"></div>
         
         <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -40,8 +28,9 @@
             <div id="navbar" class="navbar-collapse collapse">
 
               <ul class="nav navbar-nav navbar-right">
-                <li><a href="#" class="about" id="searchLink">Search</a></li>
-                <li><a href="#" class="about">About</a></li>
+                <li><a href="#" id="searchLink">Search</a></li>
+                <li><a href="#" id="eventLink">Event</a></li>
+                <li><a href="#" id="profileLink">Profile</a></li>
                 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">View By Tag<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
@@ -53,5 +42,63 @@
           </div>
         </nav>
         <div id="map-canvas"></div>
+        
+        
+        <div id="modalWindow" style="display:none"></div>
+        
+        
+        <div id="eventModal" class="modalPopup" style="display:none">
+            Event Details<br>
+            <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
+        </div>
+        
+        <div id="profileModal" class="modalPopup" style="display:none">
+            User Profile<br>
+            <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
+        </div>
+        
+        <div id="searchModal" class="modalPopup" style="display:none">
+            <center>
+                <h1>Search</h1>
+                    <input type="text" class="searchField" id="stringSearch" placeholder="search" onfocus="(this.placeholder='')" onblur="blurFunc(this);"><br>
+                    <input class="searchField" placeholder="by earliest event date" id="minDateSearch" type="text" onfocus="focusFunc(this)" onblur="blurFunc(this);"><br>
+                    <input class="searchField" placeholder="by latest event date" id="maxDateSearch" type="text" onfocus="focusFunc(this)" onblur="blurFunc(this);"><br>
+                    <div id="advancedSearchFields" style="display:none" >
+                        <select id="neighborhoodSearch" class="searchField dropdownSearch">
+                            <option value="" disabled selected>by neighborhood</option>
+                            <option value="1,1">Upper West Side</option>
+                            <option value="2,2">Upper East Side</option>
+                            <option value="2,2">Hell's Kitchen</option>
+                            <option value="2,2">Morningside Heights</option>
+                        </select>
+                        <br>
+                        <select id="eventTypeSearch" class="searchField dropdownSearch">
+                            <option value="" disabled selected>by event type</option>
+                            <option value="theater">Theater</option>
+                            <option value="music">Music</option>
+                            <option value="show">Show</option>
+                            <option value="blah">Blah</option>
+                        </select>
+                        <br>
+                        <input id="freeSearch" type="checkbox"/><span class="checkboxSearch">Free</span>
+                        <br>
+                        <input id="kidSearch" type="checkbox"/><span class="checkboxSearch">Kid Friendly</span>
+                        <br>
+                        <input id="nytPickSearch" type="checkbox"/><span class="checkboxSearch">New York Times Pick</span>
+                        <br>  
+                    </div>
+                    <div id="toggleAdvancedSearch">
+                        <center>
+                            <svg height="12px" width="24px">
+                                <path id="arrow" d="M 0 0 L 12 12 L 24 0" />
+                            </svg>
+                        </center>
+                    </div>
+                <a href="#" id="searchButton" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-search"></span> Find Events</a>
+                <br>
+                <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
+            </center>
+        </div>
+        
     </body>
 </html>
