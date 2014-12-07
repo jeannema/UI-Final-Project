@@ -37,7 +37,7 @@
             </nav>
         <div id="map-canvas"></div>
         
-        <div id="infoWindow" style="display:none">
+        <div id="infoWindow" style="display:none; overflow:auto">
             <ul>
             </ul>
         </div>
@@ -64,25 +64,35 @@
                     <input class="searchField" placeholder="by latest event date" id="maxDateSearch" type="text" onfocus="focusFunc(this)" onblur="blurFunc(this);"><br>
                     <div id="advancedSearchFields" style="display:none" >
                         <select id="neighborhoodSearch" class="searchField dropdownSearch">
-                            <option value="" disabled selected>by neighborhood</option>
+                            <option value="" selected>by neighborhood</option>
+                            <option value="Morningside+Heights">Morningside Heights</option>
                             <option value="Upper+West+Side">Upper West Side</option>
                             <option value="Upper+East+Side">Upper East Side</option>
                             <option value="Greenwich+Village">Greenwich Village</option>
+                            <option value="Clinton">Hell's Kitchen</option>
+                            <option value="Midtown+East">Midtown East</option>
+                            <option value="Midtown+West">Midtown West</option>
+                            <option value="Chelsea">Chelsea</option>
+                            <option value="East+Village">East Village</option>
+                            <option value="West+Village">West Village</option>
+                            <option value="Lower+East+Side">Lower East Side</option>
+                            <option value="Little+Italy">Little Italy</option>
+
                         </select>
                         <br>
                         <select id="eventTypeSearch" class="searchField dropdownSearch">
-                            <option value="" disabled selected>by event type</option>
-                            <option value="theater">Theater</option>
-                            <option value="music">Music</option>
-                            <option value="show">Show</option>
-                            <option value="blah">Blah</option>
+                            <option value="" selected>by event type</option>
+                            <option value="Theater">Theater</option>
+                            <option value="Dance">Dance</option>
+                            <option value="Movies">Movies</option>
+                            <option value="forChildren">Children</option>
+                            <option value="Art">Art</option>
+                            
                         </select>
                         <br>
                         <input id="freeSearch" type="checkbox"/><span class="checkboxSearch">Free</span>
                         <br>
                         <input id="kidSearch" type="checkbox"/><span class="checkboxSearch">Kid Friendly</span>
-                        <br>
-                        <input id="nytPickSearch" type="checkbox"/><span class="checkboxSearch">New York Times Pick</span>
                         <br>  
                     </div>
                     <div id="toggleAdvancedSearch">

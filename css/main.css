@@ -6,6 +6,7 @@
 html, body {
     height: 100%;
     margin: 0px;
+    overflow: hidden;
 }
 
 /* modal styles */
@@ -126,4 +127,13 @@ html, body {
     background-color: #ffffff;
     opacity: 0.9;
     border-radius: 15px;
+}
+
+.eventListItem{
+    padding: 5px;
+}
+
+.eventListItem:hover{
+    color: orange;
+    cursor: pointer;
 }
