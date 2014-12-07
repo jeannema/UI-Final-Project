@@ -333,12 +333,13 @@ function showPrevious(){
 
 /*---------- End of search methods ----------*/
 
+
+// @elisha
 // ********************************************** event modal methods **********************************************
 
 function initEventModal(){
     $("#eventTitle").html(events[clickedEventId].event_name);
 }
-
 
 // ********************************************** profile modal methods **********************************************
 

@@ -40,7 +40,7 @@ html, body {
     top: 24%;   
 }
 
-/* Elisha: change size/positioning of event and profile modals here*/
+/* @elisha: change size/positioning of event and profile modals here*/
 #eventModal{
     width: 50%;
     height: 47%;
