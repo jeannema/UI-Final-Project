@@ -5,6 +5,7 @@ var markers = new Array();
 var events; // Results returned by NYT API
 var clickedEventId;
 var storedEvents; // Used in store.js object for persistent event data storage across user sessions
+var offset = 0;
 
 $(document).ready(function(){
    // store.clear(); // Clear store.js object for testing
@@ -46,7 +47,7 @@ $(document).ready(function(){
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
     
     // attach event handlers to search modal elements
-    $("#searchButton").click(function(){ search() });
+    $("#searchButton").click(function(){ newSearch() });
     $("#toggleAdvancedSearch").click(function(){ showAdvancedSearchFields() });
     $("#toggleAdvancedSearch").mouseover(function(){ 
         $("#arrow").css("stroke","gray");
@@ -79,7 +80,6 @@ function closeModal(){
     $("#eventModal").fadeOut("fast");
     $("#profileModal").fadeOut("fast");
     $("#modalWindow").fadeOut("fast");
-
 }
    
 // ********************************************** Search methods **********************************************
@@ -107,6 +107,14 @@ function focusFunc(input){
     }
 }
 
+// for select fields, change color if a valid option is selected
+function selectChange(input){
+    if ($(input).val() && $(input).val().length > 0)
+        $(input).css("color", "black");
+    else
+        $(input).css("color", "#B0B0B0");
+}
+
 // display advanced search fields by sliding down; change svg arrow to an up arrow
 function showAdvancedSearchFields(){
     $("#advancedSearchFields").slideDown( "slow", function() {
@@ -127,6 +135,12 @@ function hideAdvancedSearchFields(){
     $('#searchModal').animate({'top': '24%'}, { duration: 600, queue: false });
 }
 
+// new search (set offset to 0)
+function newSearch(){
+    offset = 0;
+    search();
+}
+
 // search functionality
 function search(){
     $("#infoWindow").html("");
@@ -137,37 +151,7 @@ function search(){
     }
     markers = new Array();
     
-    // get input vals
-    var query = "http://api.nytimes.com/svc/events/v2/listings.jsonp?";
-    var search = $("#stringSearch").val();
-    var minDate = $("#minDateSearch").val();
-    var maxDate = $("#maxDateSearch").val();
-    var neighborhood = $("#neighborhoodSearch").val();
-    var eventType = $("#eventTypeSearch").val();
-    var free = $("#freeSearch").prop('checked');
-    var kid = $("#kidSearch").prop('checked');
-    
-    // formulate query
-    query += "date_range=";
-    if (minDate.length > 0)                         query += minDate + "%3A";
-    else                                            query += "2013-01-01%3A";
-    if (maxDate.length > 0)                         query += minDate + "&";
-    else                                            query += "2015-01-01&";
-    if (search.length > 0)                          query += "query=" + search + "&filters=";
-    if (query.substring(query.length-1) == "&")     query += "filters=";
-    if (neighborhood && neighborhood.length > 0)    query += "neighborhood:%22" + neighborhood + "%22,";
-    if (eventType && eventType.length > 0)          query += "category:" + eventType + ",";
-    if (free)                                       query += "free:true,";
-    if (kid)                                        query += "kid_friendly:true,";
-    
-    // get rid of last comma
-    if (query.substring(query.length-1) == ",")
-        query = query.substring(0, query.length - 1);
-    // get rid of &filters=
-    if (query.substring(query.length-1) == "=")
-        query = query.substring(0, query.length - 9);
-    // add api key
-    query += "&api-key=b48655f732e1eca5a752c618c1d7543b:9:70165895";
+    var query = getSearchQuery();
     
     // get data
     $.ajax({
@@ -189,74 +173,164 @@ function search(){
                 
                 // iterate through results
                 for (var i = 0; i < events.length; i++) {
-                    var lat = events[i].geocode_latitude;
-                    var long = events[i].geocode_longitude;
                     
-                    // continuously calculate map center
-                    if (!isNaN(parseFloat(lat)) && !isNaN(parseFloat(long))){
-                        centerLat += parseFloat(lat);
-                        centerLong += parseFloat(long);
-                        count++;
+                    // only display results in new york city
+                    if (events[i].city == "New York" ||
+                        events[i].city == "Bronx" ||
+                        events[i].city == "Brooklyn" ||
+                        events[i].city == "Queens" ||
+                        events[i].city == "Staten Island")
+                    {
+                        var lat = events[i].geocode_latitude;
+                        var long = events[i].geocode_longitude;
+
+                        // continuously calculate map center
+                        if (!isNaN(parseFloat(lat)) && !isNaN(parseFloat(long))){
+                            centerLat += parseFloat(lat);
+                            centerLong += parseFloat(long);
+                            count++;
+                        }
+
+                        addEvent(events[i], i);
                     }
-
-                    // create new map marker
-                    markers.push(new google.maps.Marker({
-                        position: new google.maps.LatLng(lat, long),
-                        map: map,
-                        id: i,
-                        icon: 'img/puppy.png'
-                    }));
-
-                    // open event modal on marker click
-                    google.maps.event.addListener(markers[markers.length-1], 'click', function() {
-                        clickedEventId = this.id;
-                        showModal("event");
-                    });
-
-                    // on marker hover, display event category and title
-                    google.maps.event.addListener(markers[markers.length-1], 'mouseover', function() {
-                        infoWindow.setContent("<b>" + events[this.id].category + "</b>: " + events[this.id].event_name);
-                        infoWindow.open(map, this);
-                        $(".gm-style-iw").next("div").hide();
-                        $(".gm-style-iw").css("padding-left", "8px");
-                    });
-                    google.maps.event.addListener(markers[markers.length-1], 'mouseout', function() {
-                        infoWindow.close();
-                    });
-                    
-                    // add event data to the info window on the right
-                    var markerInfo = document.createElement("div");
-                    markerInfo.setAttribute("class", "eventListItem");
-                    markerInfo.id = i;
-                    markerInfo.innerHTML = events[i].event_name;
-                    $("#infoWindow").append(markerInfo);
-
-                    // attach handlers to the text in the infoWindow; actions are same as with markers
-                    $(markerInfo).click(function(){
-                        clickedEventId = this.id;
-                        showModal("event");
-                    });
-                    $(markerInfo).mouseover(function(){
-                        infoWindow.setContent("<b>" + events[this.id].category + "</b>: " + events[this.id].event_name);
-                        infoWindow.open(map, markers[this.id]);
-                    });
-                    $(markerInfo).mouseout(function(){
-                        infoWindow.close();
-                    });
                 }
                 
+                // add previous and more links
+                $("#infoWindow").append("<br>");
+                var nextLink;
+                if (offset != 0) {
+                    var previousLink = "<p class='previousNextLink' onclick='showPrevious();' style='float:left; padding-left:40px;'>Previous</p>";
+                    $("#infoWindow").append(previousLink);
+                    nextLink = "<p class='previousNextLink' onclick='showNext();' style='float:right; padding-right:40px;'>Next</p>";
+                }
+                else
+                    nextLink = "<p class='previousNextLink' onclick='showNext();'>Next</p>";
+                $("#infoWindow").append(nextLink);
+
+
                 // calculate final map center and move
                 centerLat /= count;
                 centerLong /= count;
                 if (centerLat != 0 && centerLong != 0)
                     map.setCenter(new google.maps.LatLng(centerLat, centerLong));
             }
+            else // results array size 0
+                $("#infoWindow").html("<br>Sorry, no events found matching the search criteria.");
         }
     }); 
     
     closeModal();
     $("#infoWindow").show();
 }
+
+// read search input vals
+function getSearchQuery(){
+    // get input vals
+    var query = "http://api.nytimes.com/svc/events/v2/listings.jsonp?";
+    var search = $("#stringSearch").val();
+    var minDate = $("#minDateSearch").val();
+    var maxDate = $("#maxDateSearch").val();
+    var neighborhood = $("#neighborhoodSearch").val();
+    var eventType = $("#eventTypeSearch").val();
+    var free = $("#freeSearch").prop('checked');
+    var kid = $("#kidSearch").prop('checked');
+    
+    // get current date format - only search events with min date of today
+    var today = new Date();
+    var day = today.getDate();
+    var month = today.getMonth() + 1;
+    var year = today.getFullYear();
+    if (day < 10)       day = "0" + day;
+    if (month < 10)     month = "0" + month;
+    
+    // formulate query
+    query += "date_range=";
+    if (minDate.length > 0)                         query += minDate + "%3A";
+    else                                            query += year + "-" + month + "-" + day + "01%3A";
+    if (maxDate.length > 0)                         query += maxDate + "&";
+    else                                            query += "2015-01-01&";
+    if (search.length > 0)                          query += "query=" + search + "&filters=";
+    if (query.substring(query.length-1) == "&")     query += "filters=";
+    if (neighborhood && neighborhood.length > 0)    query += "neighborhood:%22" + neighborhood + "%22,";
+    if (eventType && eventType.length > 0)          query += "category:" + eventType + ",";
+    if (free)                                       query += "free:true,";
+    if (kid)                                        query += "kid_friendly:true,";
+    
+    if ((minDate.length > 0 || maxDate.length > 0) && search.length == 0 && !(neighborhood && neighborhood.length > 0)
+       && !(eventType && eventType.length > 0) && !free && !kid){
+        alert("If searching by date, please also fill another search field");
+        return;
+    }
+    // get rid of last comma
+    if (query.substring(query.length-1) == ",")
+        query = query.substring(0, query.length - 1);
+    // get rid of &filters=
+    if (query.substring(query.length-1) == "=")
+        query = query.substring(0, query.length - 9);
+    // add offset and api key
+    query += "&offset=" + offset + "&api-key=b48655f732e1eca5a752c618c1d7543b:9:70165895";
+
+    return query; // return query string
+}
+
+function addEvent(event, index){
+    // create new map marker
+    markers.push(new google.maps.Marker({
+        position: new google.maps.LatLng(event.geocode_latitude, event.geocode_longitude),
+        map: map,
+        id: index,
+        icon: 'img/puppy.png'
+    }));
+
+    // open event modal on marker click
+    google.maps.event.addListener(markers[markers.length-1], 'click', function() {
+        clickedEventId = this.id;
+        showModal("event");
+    });
+
+    // on marker hover, display event category and title
+    google.maps.event.addListener(markers[markers.length-1], 'mouseover', function() {
+        infoWindow.setContent("<b>" + events[this.id].category + "</b>: " + events[this.id].event_name);
+        infoWindow.open(map, this);
+        $(".gm-style-iw").next("div").hide();
+        $(".gm-style-iw").css("padding-left", "8px");
+    });
+    google.maps.event.addListener(markers[markers.length-1], 'mouseout', function() {
+        infoWindow.close();
+    });
+
+    // add event data to the info window on the right
+    var markerInfo = document.createElement("div");
+    markerInfo.setAttribute("class", "eventListItem");
+    markerInfo.id = index;
+    markerInfo.innerHTML = event.event_name;
+    $("#infoWindow").append(markerInfo);
+
+    // attach handlers to the text in the infoWindow; actions are same as with markers
+    $(markerInfo).click(function(){
+        clickedEventId = this.id;
+        showModal("event");
+    });
+    $(markerInfo).mouseover(function(){
+        infoWindow.setContent("<b>" + events[this.id].category + "</b>: " + events[this.id].event_name);
+        infoWindow.open(map, markers[this.id]);
+    });
+    $(markerInfo).mouseout(function(){
+        infoWindow.close();
+    });
+}
+
+function showNext(){
+    offset += 20;
+    search();
+}
+
+function showPrevious(){
+    if (offset == 0)    return;
+    offset -= 20;
+    search();
+}
+
 /*---------- End of search methods ----------*/
 
 // ********************************************** event modal methods **********************************************

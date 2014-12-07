@@ -107,15 +107,7 @@ html, body {
     margin-top: 15px;
 }
 
-/* misc styles */
-#map-canvas {
-    height: 100%;
-}
-
-.header-placeholder{
-    height: 50px;
-}
-
+/* info window styles */
 #infoWindow{
     position: fixed;
     right: 15px;
@@ -136,4 +128,27 @@ html, body {
 .eventListItem:hover{
     color: orange;
     cursor: pointer;
+}
+
+.previousNextLink{
+    color: black;
+    font-weight: 900;
+    font-size: 16px; 
+}
+
+.previousNextLink:hover{
+    cursor: pointer;
+    color: gray;
+}
+
+/* misc styles */
+#map-canvas {
+    height: 100%;
+}
+
+.header-placeholder{
+    height: 50px;
+}
+input[type='checkbox'] {
+    zoom: 1.6;
 }

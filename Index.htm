@@ -43,7 +43,7 @@
         </div>
 
         
-        <div id="modalWindow" style="display:none"></div>
+        <div id="modalWindow"></div>
         
         
         <div id="eventModal" class="modalPopup" style="display:none">
@@ -56,14 +56,14 @@
             <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
         </div>
         
-        <div id="searchModal" class="modalPopup" style="display:none">
+        <div id="searchModal" class="modalPopup">
             <center>
                 <h1>Search</h1>
                     <input type="text" class="searchField" id="stringSearch" placeholder="search" onfocus="(this.placeholder='')" onblur="blurFunc(this);"><br>
                     <input class="searchField" placeholder="by earliest event date" id="minDateSearch" type="text" onfocus="focusFunc(this)" onblur="blurFunc(this);"><br>
                     <input class="searchField" placeholder="by latest event date" id="maxDateSearch" type="text" onfocus="focusFunc(this)" onblur="blurFunc(this);"><br>
                     <div id="advancedSearchFields" style="display:none" >
-                        <select id="neighborhoodSearch" class="searchField dropdownSearch">
+                        <select id="neighborhoodSearch" class="searchField dropdownSearch" onchange="selectChange(this)">
                             <option value="" selected>by neighborhood</option>
                             <option value="Morningside+Heights">Morningside Heights</option>
                             <option value="Upper+West+Side">Upper West Side</option>
@@ -80,7 +80,7 @@
 
                         </select>
                         <br>
-                        <select id="eventTypeSearch" class="searchField dropdownSearch">
+                        <select id="eventTypeSearch" class="searchField dropdownSearch" onchange="selectChange(this)">
                             <option value="" selected>by event type</option>
                             <option value="Theater">Theater</option>
                             <option value="Dance">Dance</option>
