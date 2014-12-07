@@ -107,13 +107,17 @@ function hideAdvancedSearchFields(){
     $('#searchModal').animate({'top': '24%'}, { duration: 600, queue: false });
 }
 
+// search functionality
 function search(){
-    // clear old markers
+    $("#infoWindow").html("");
+
+    // remove and clear old markers
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
     }
     markers = new Array();
     
+    // get input vals
     var query = "http://api.nytimes.com/svc/events/v2/listings.jsonp?";
     var search = $("#stringSearch").val();
     var minDate = $("#minDateSearch").val();
@@ -122,21 +126,19 @@ function search(){
     var eventType = $("#eventTypeSearch").val();
     var free = $("#freeSearch").prop('checked');
     var kid = $("#kidSearch").prop('checked');
-    var nytPick = $("#nytPickSearch").prop('checked');
     
-    if (search.length > 0)      query += "query=" + search + "&filters=";
-    
-    // if no query, manually add &filters=
-    if (query.substring(query.length-1) == "?")
-        query += "filters=";
-    
-    //if (minDate.length > 0)   alert(minDate);
-    //if (maxDate.length > 0)   stuff
+    // formulate query
+    query += "date_range=";
+    if (minDate.length > 0)                         query += minDate + "%3A";
+    else                                            query += "2013-01-01%3A";
+    if (maxDate.length > 0)                         query += minDate + "&";
+    else                                            query += "2015-01-01&";
+    if (search.length > 0)                          query += "query=" + search + "&filters=";
+    if (query.substring(query.length-1) == "&")     query += "filters=";
     if (neighborhood && neighborhood.length > 0)    query += "neighborhood:%22" + neighborhood + "%22,";
     if (eventType && eventType.length > 0)          query += "category:" + eventType + ",";
     if (free)                                       query += "free:true,";
     if (kid)                                        query += "kid_friendly:true,";
-    if (nytPick)                                    query += "times_pick:true,";
     
     // get rid of last comma
     if (query.substring(query.length-1) == ",")
@@ -144,12 +146,10 @@ function search(){
     // get rid of &filters=
     if (query.substring(query.length-1) == "=")
         query = query.substring(0, query.length - 9);
-    
     // add api key
-    if (query.substring(query.length-1) != "?") 
-        query += "&"
-    query += "api-key=b48655f732e1eca5a752c618c1d7543b:9:70165895";
+    query += "&api-key=b48655f732e1eca5a752c618c1d7543b:9:70165895";
     
+    // get data
     $.ajax({
         type: "GET",
         url: query,
@@ -159,16 +159,27 @@ function search(){
         {  
             events = data.results;
 
+            // check to see if there are results
             if (events.length > 0){
+                
+                // keep track of where map center should be
+                var count = 0;
                 var centerLat = 0;
                 var centerLong = 0;
-
+                
+                // iterate through results
                 for (var i = 0; i < events.length; i++) {
                     var lat = events[i].geocode_latitude;
                     var long = events[i].geocode_longitude;
-                    centerLat += parseFloat(lat);
-                    centerLong += parseFloat(long);
+                    
+                    // continuously calculate map center
+                    if (!isNaN(parseFloat(lat)) && !isNaN(parseFloat(long))){
+                        centerLat += parseFloat(lat);
+                        centerLong += parseFloat(long);
+                        count++;
+                    }
 
+                    // create new map marker
                     markers.push(new google.maps.Marker({
                         position: new google.maps.LatLng(lat, long),
                         map: map,
@@ -176,51 +187,54 @@ function search(){
                         icon: 'img/puppy.png'
                     }));
 
+                    // open event modal on marker click
                     google.maps.event.addListener(markers[markers.length-1], 'click', function() {
                         clickedEventId = this.id;
                         showModal("event");
                     });
 
+                    // on marker hover, display event category and title
                     google.maps.event.addListener(markers[markers.length-1], 'mouseover', function() {
                         infoWindow.setContent("<b>" + events[this.id].category + "</b>: " + events[this.id].event_name);
                         infoWindow.open(map, this);
                         $(".gm-style-iw").next("div").hide();
                         $(".gm-style-iw").css("padding-left", "8px");
-                       // marker.setIcon('img/starW.png');
                     });
                     google.maps.event.addListener(markers[markers.length-1], 'mouseout', function() {
                         infoWindow.close();
                     });
                     
+                    // add event data to the info window on the right
                     var markerInfo = document.createElement("div");
-                    markerInfo.setAttribute("class", "userRating");
+                    markerInfo.setAttribute("class", "eventListItem");
                     markerInfo.id = i;
-                    markerInfo.innerHTML = "<p class='userLink'>" + events[i].event_name + "</p>";
+                    markerInfo.innerHTML = events[i].event_name;
                     $("#infoWindow").append(markerInfo);
 
+                    // attach handlers to the text in the infoWindow; actions are same as with markers
                     $(markerInfo).click(function(){
                         clickedEventId = this.id;
                         showModal("event");
                     });
-                    
                     $(markerInfo).mouseover(function(){
                         infoWindow.setContent("<b>" + events[this.id].category + "</b>: " + events[this.id].event_name);
                         infoWindow.open(map, markers[this.id]);
                     });
-                    
                     $(markerInfo).mouseout(function(){
                         infoWindow.close();
                     });
                 }
-                centerLat /= events.length;
-                centerLong /= events.length;
-                map.setCenter(new google.maps.LatLng(centerLat, centerLong));
+                
+                // calculate final map center and move
+                centerLat /= count;
+                centerLong /= count;
+                if (centerLat != 0 && centerLong != 0)
+                    map.setCenter(new google.maps.LatLng(centerLat, centerLong));
             }
         }
     }); 
     
     closeModal();
-    
     $("#infoWindow").show();
 }
 /*---------- End of search methods ----------*/

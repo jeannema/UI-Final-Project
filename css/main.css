@@ -128,3 +128,12 @@ html, body {
     opacity: 0.9;
     border-radius: 15px;
 }
+
+.eventListItem{
+    padding: 5px;
+}
+
+.eventListItem:hover{
+    color: orange;
+    cursor: pointer;
+}
