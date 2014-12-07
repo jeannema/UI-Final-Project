@@ -197,14 +197,19 @@ function search(){
                 
                 // add previous and more links
                 $("#infoWindow").append("<br>");
-                var nextLink;
+                var previousLink = "";
+                var nextLink = "";
                 if (offset != 0) {
-                    var previousLink = "<p class='previousNextLink' onclick='showPrevious();' style='float:left; padding-left:40px;'>Previous</p>";
-                    $("#infoWindow").append(previousLink);
-                    nextLink = "<p class='previousNextLink' onclick='showNext();' style='float:right; padding-right:40px;'>Next</p>";
+                    if (events.length < 20)
+                        previousLink = "<p class='previousNextLink' onclick='showPrevious();'>Previous</p>";
+                    else{
+                        previousLink = "<p class='previousNextLink' onclick='showPrevious();' style='float:left; padding-left:40px;'>Previous</p>";
+                        nextLink = "<p class='previousNextLink' onclick='showNext();' style='float:right; padding-right:40px;'>Next</p>";
+                    }
                 }
                 else
                     nextLink = "<p class='previousNextLink' onclick='showNext();'>Next</p>";
+                $("#infoWindow").append(previousLink);
                 $("#infoWindow").append(nextLink);
 
 
