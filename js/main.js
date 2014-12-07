@@ -1,8 +1,12 @@
 // main.js
 var map;
+var infoWindow = new google.maps.InfoWindow;
 var markers = new Array();
+var events;
+var clickedEventId;
+
 $(document).ready(function(){
-    // modal handlers
+    // modal handlers                                       
     $("#searchLink").click(function(){
         showModal("search");  
     });
@@ -10,9 +14,6 @@ $(document).ready(function(){
         closeModal();  
     });
     // FOR DEBUGGING; take out later
-    $("#eventLink").click(function(){
-        showModal("event");  
-    });
     $("#profileLink").click(function(){
         showModal("profile");  
     });
@@ -23,19 +24,6 @@ $(document).ready(function(){
         center: new google.maps.LatLng(40.7993,-73.9667)
     }
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-
-    markers.push(new google.maps.Marker({
-        position: new google.maps.LatLng(40.7833,-73.9667),
-        map: map,
-        title: 'Central Park',
-        icon: 'img/puppy.png'
-    }));
-    markers.push(new google.maps.Marker({
-        position: new google.maps.LatLng(40.8075,-73.9619),
-        map: map,
-        title: 'School',
-        icon: 'img/seas.png'
-    }));
     
     // attach event handlers to search modal elements
     $("#searchButton").click(function(){ search() });
@@ -55,10 +43,14 @@ function showModal(type) {
     $("#modalWindow").fadeIn("slow");
     if (type == "search")
         $("#searchModal").fadeIn("slow");
-    else if (type == "event")
+    else if (type == "event"){
+        initEventModal();
         $("#eventModal").fadeIn("slow");
-    else if (type == "profile")
+    }
+    else if (type == "profile"){
+        initProfileModal();
         $("#profileModal").fadeIn("slow");
+    }
 }
 
 // hide modal
@@ -152,7 +144,11 @@ function search(){
     // get rid of &filters=
     if (query.substring(query.length-1) == "=")
         query = query.substring(0, query.length - 9);
-    query += "&api-key=b48655f732e1eca5a752c618c1d7543b:9:70165895";
+    
+    // add api key
+    if (query.substring(query.length-1) != "?") 
+        query += "&"
+    query += "api-key=b48655f732e1eca5a752c618c1d7543b:9:70165895";
     
     $.ajax({
         type: "GET",
@@ -160,19 +156,52 @@ function search(){
         cache: true,
         dataType: "jsonp",
         success: function(data)
-        {  
-            for (var i = 0; i < data.results.length; i++) {
-                var lat = data.results[i].geocode_latitude;
-                var long = data.results[i].geocode_longitude;
-
+        {  debugger;
+            events = data.results;
+            for (var i = 0; i < events.length; i++) {
+                var lat = events[i].geocode_latitude;
+                var long = events[i].geocode_longitude;
+                
                 markers.push(new google.maps.Marker({
                     position: new google.maps.LatLng(lat, long),
                     map: map,
+                    id: i,
                     icon: 'img/puppy.png'
                 }));
+                
+                google.maps.event.addListener(markers[markers.length-1], 'click', function() {
+                    clickedEventId = this.id;
+                    showModal("event");
+                });
+                
+                google.maps.event.addListener(markers[markers.length-1], 'mouseover', function() {
+                    infoWindow.setContent("<b>" + events[this.id].category + "</b>: " + events[this.id].event_name);
+                    infoWindow.open(map, this);
+                    $(".gm-style-iw").next("div").hide();
+                    $(".gm-style-iw").css("padding-left", "8px");
+                   // marker.setIcon('img/starW.png');
+                });
+                google.maps.event.addListener(markers[markers.length-1], 'mouseout', function() {
+                    infoWindow.close();
+                });
             }
         }
     }); 
     
     closeModal();
+    $("#infoWindow").show();
+}
+
+
+// ********************************************** event modal methods **********************************************
+
+function initEventModal(){
+    $("#eventTitle").html(events[clickedEventId].event_name);
+}
+
+
+// ********************************************** profile modal methods **********************************************
+
+function initProfileModal(){
+    
 }
