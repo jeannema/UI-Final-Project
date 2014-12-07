@@ -4,8 +4,26 @@ var infoWindow = new google.maps.InfoWindow;
 var markers = new Array();
 var events;
 var clickedEventId;
+var storedEvents;
 
 $(document).ready(function(){
+    // Implementation of data structure for persistent storage across user sessions
+    store.set("username", "Baymax");
+    console.log(store.get("username"));
+    store.set("username", "Mulan");
+    console.log(store.get("username"));
+    store.set("storedEvents", {
+        "eventName": [],
+        "eventStatus": []
+    });
+    storedEvents = store.get("storedEvents");
+    console.dir(storedEvents);
+    storedEvents.eventName.push("event 1");
+    storedEvents.eventName.push("event 2");
+    storedEvents.eventStatus.push("active");
+    console.dir(storedEvents);
+
+    
     // modal handlers                                       
     $("#searchLink").click(function(){
         showModal("search");  
