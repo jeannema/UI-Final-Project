@@ -62,7 +62,7 @@ function closeModal(){
 
 }
    
-// ********************************************** search methods **********************************************
+// ********************************************** Search methods **********************************************
 
 // on input blur, reset the placeholders; change input type for the date fields
 // because date fields cannot have text placeholders
@@ -220,9 +220,10 @@ function search(){
     }); 
     
     closeModal();
+    
     $("#infoWindow").show();
 }
-
+/*---------- End of search methods ----------*/
 
 // ********************************************** event modal methods **********************************************
 
