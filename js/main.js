@@ -1,5 +1,6 @@
 // main.js
-
+var map;
+var markers = new Array();
 $(document).ready(function(){
     // modal handlers
     $("#searchLink").click(function(){
@@ -21,20 +22,20 @@ $(document).ready(function(){
         zoom: 13,
         center: new google.maps.LatLng(40.7993,-73.9667)
     }
-    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-    var current = new google.maps.Marker({
+    markers.push(new google.maps.Marker({
         position: new google.maps.LatLng(40.7833,-73.9667),
         map: map,
         title: 'Central Park',
         icon: 'img/puppy.png'
-    });
-    var school = new google.maps.Marker({
+    }));
+    markers.push(new google.maps.Marker({
         position: new google.maps.LatLng(40.8075,-73.9619),
         map: map,
         title: 'School',
         icon: 'img/seas.png'
-    });
+    }));
     
     // attach event handlers to search modal elements
     $("#searchButton").click(function(){ search() });
@@ -115,5 +116,63 @@ function hideAdvancedSearchFields(){
 }
 
 function search(){
-    alert("search!");   
+    // clear old markers
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+    }
+    markers = new Array();
+    
+    var query = "http://api.nytimes.com/svc/events/v2/listings.jsonp?";
+    var search = $("#stringSearch").val();
+    var minDate = $("#minDateSearch").val();
+    var maxDate = $("#maxDateSearch").val();
+    var neighborhood = $("#neighborhoodSearch").val();
+    var eventType = $("#eventTypeSearch").val();
+    var free = $("#freeSearch").prop('checked');
+    var kid = $("#kidSearch").prop('checked');
+    var nytPick = $("#nytPickSearch").prop('checked');
+    
+    if (search.length > 0)      query += "query=" + search + "&filters=";
+    
+    // if no query, manually add &filters=
+    if (query.substring(query.length-1) == "?")
+        query += "filters=";
+    
+    //if (minDate.length > 0)   alert(minDate);
+    //if (maxDate.length > 0)   stuff
+    if (neighborhood)           query += "borough:\"" + neighborhood + "\",";
+    if (eventType)              query += "category:" + eventType + ",";
+    if (free)                   query += "free:true,";
+    if (kid)                    query += "kid_friendly:true,";
+    if (nytPick)                query += "times_pick:true,";
+    
+    // get rid of last comma
+    if (query.substring(query.length-1) == ",")
+        query = query.substring(0, query.length - 1);
+    // get rid of &filters=
+    if (query.substring(query.length-1) == "=")
+        query = query.substring(0, query.length - 9);
+    query += "&api-key=b48655f732e1eca5a752c618c1d7543b:9:70165895";
+    
+    $.ajax({
+        type: "GET",
+        url: query,
+        cache: true,
+        dataType: "jsonp",
+        success: function(data)
+        {  
+            for (var i = 0; i < data.results.length; i++) {
+                var lat = data.results[i].geocode_latitude;
+                var long = data.results[i].geocode_longitude;
+
+                markers.push(new google.maps.Marker({
+                    position: new google.maps.LatLng(lat, long),
+                    map: map,
+                    icon: 'img/puppy.png'
+                }));
+            }
+        }
+    }); 
+    
+    closeModal();
 }
