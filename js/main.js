@@ -132,11 +132,11 @@ function search(){
     
     //if (minDate.length > 0)   alert(minDate);
     //if (maxDate.length > 0)   stuff
-    if (neighborhood)           query += "neighborhood:%22" + neighborhood + "%22,";
-    if (eventType)              query += "category:" + eventType + ",";
-    if (free)                   query += "free:true,";
-    if (kid)                    query += "kid_friendly:true,";
-    if (nytPick)                query += "times_pick:true,";
+    if (neighborhood && neighborhood.length > 0)    query += "neighborhood:%22" + neighborhood + "%22,";
+    if (eventType && eventType.length > 0)          query += "category:" + eventType + ",";
+    if (free)                                       query += "free:true,";
+    if (kid)                                        query += "kid_friendly:true,";
+    if (nytPick)                                    query += "times_pick:true,";
     
     // get rid of last comma
     if (query.substring(query.length-1) == ",")
@@ -156,34 +156,65 @@ function search(){
         cache: true,
         dataType: "jsonp",
         success: function(data)
-        {  debugger;
+        {  
             events = data.results;
-            for (var i = 0; i < events.length; i++) {
-                var lat = events[i].geocode_latitude;
-                var long = events[i].geocode_longitude;
-                
-                markers.push(new google.maps.Marker({
-                    position: new google.maps.LatLng(lat, long),
-                    map: map,
-                    id: i,
-                    icon: 'img/puppy.png'
-                }));
-                
-                google.maps.event.addListener(markers[markers.length-1], 'click', function() {
-                    clickedEventId = this.id;
-                    showModal("event");
-                });
-                
-                google.maps.event.addListener(markers[markers.length-1], 'mouseover', function() {
-                    infoWindow.setContent("<b>" + events[this.id].category + "</b>: " + events[this.id].event_name);
-                    infoWindow.open(map, this);
-                    $(".gm-style-iw").next("div").hide();
-                    $(".gm-style-iw").css("padding-left", "8px");
-                   // marker.setIcon('img/starW.png');
-                });
-                google.maps.event.addListener(markers[markers.length-1], 'mouseout', function() {
-                    infoWindow.close();
-                });
+
+            if (events.length > 0){
+                var centerLat = 0;
+                var centerLong = 0;
+
+                for (var i = 0; i < events.length; i++) {
+                    var lat = events[i].geocode_latitude;
+                    var long = events[i].geocode_longitude;
+                    centerLat += parseFloat(lat);
+                    centerLong += parseFloat(long);
+
+                    markers.push(new google.maps.Marker({
+                        position: new google.maps.LatLng(lat, long),
+                        map: map,
+                        id: i,
+                        icon: 'img/puppy.png'
+                    }));
+
+                    google.maps.event.addListener(markers[markers.length-1], 'click', function() {
+                        clickedEventId = this.id;
+                        showModal("event");
+                    });
+
+                    google.maps.event.addListener(markers[markers.length-1], 'mouseover', function() {
+                        infoWindow.setContent("<b>" + events[this.id].category + "</b>: " + events[this.id].event_name);
+                        infoWindow.open(map, this);
+                        $(".gm-style-iw").next("div").hide();
+                        $(".gm-style-iw").css("padding-left", "8px");
+                       // marker.setIcon('img/starW.png');
+                    });
+                    google.maps.event.addListener(markers[markers.length-1], 'mouseout', function() {
+                        infoWindow.close();
+                    });
+                    
+                    var markerInfo = document.createElement("div");
+                    markerInfo.setAttribute("class", "userRating");
+                    markerInfo.id = i;
+                    markerInfo.innerHTML = "<p class='userLink'>" + events[i].event_name + "</p>";
+                    $("#infoWindow").append(markerInfo);
+
+                    $(markerInfo).click(function(){
+                        clickedEventId = this.id;
+                        showModal("event");
+                    });
+                    
+                    $(markerInfo).mouseover(function(){
+                        infoWindow.setContent("<b>" + events[this.id].category + "</b>: " + events[this.id].event_name);
+                        infoWindow.open(map, markers[this.id]);
+                    });
+                    
+                    $(markerInfo).mouseout(function(){
+                        infoWindow.close();
+                    });
+                }
+                centerLat /= events.length;
+                centerLong /= events.length;
+                map.setCenter(new google.maps.LatLng(centerLat, centerLong));
             }
         }
     }); 

@@ -36,7 +36,7 @@
         </nav>
         <div id="map-canvas"></div>
         
-        <div id="infoWindow" style="display:none">
+        <div id="infoWindow" style="display:none; overflow:auto">
             <ul>
             </ul>
         </div>
@@ -63,14 +63,14 @@
                     <input class="searchField" placeholder="by latest event date" id="maxDateSearch" type="text" onfocus="focusFunc(this)" onblur="blurFunc(this);"><br>
                     <div id="advancedSearchFields" style="display:none" >
                         <select id="neighborhoodSearch" class="searchField dropdownSearch">
-                            <option value="" disabled selected>by neighborhood</option>
+                            <option value="" selected>by neighborhood</option>
                             <option value="Upper+West+Side">Upper West Side</option>
                             <option value="Upper+East+Side">Upper East Side</option>
                             <option value="Greenwich+Village">Greenwich Village</option>
                         </select>
                         <br>
                         <select id="eventTypeSearch" class="searchField dropdownSearch">
-                            <option value="" disabled selected>by event type</option>
+                            <option value="" selected>by event type</option>
                             <option value="theater">Theater</option>
                             <option value="music">Music</option>
                             <option value="show">Show</option>
