@@ -140,7 +140,7 @@ function search(){
     
     //if (minDate.length > 0)   alert(minDate);
     //if (maxDate.length > 0)   stuff
-    if (neighborhood)           query += "borough:\"" + neighborhood + "\",";
+    if (neighborhood)           query += "neighborhood:%22" + neighborhood + "%22,";
     if (eventType)              query += "category:" + eventType + ",";
     if (free)                   query += "free:true,";
     if (kid)                    query += "kid_friendly:true,";
