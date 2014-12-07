@@ -2,26 +2,28 @@
 var map;
 var infoWindow = new google.maps.InfoWindow;
 var markers = new Array();
-var events;
+var events; // Results returned by NYT API
 var clickedEventId;
-var storedEvents;
+var storedEvents; // Used in store.js object for persistent event data storage across user sessions
 
 $(document).ready(function(){
-    // Implementation of data structure for persistent storage across user sessions
-    store.set("username", "Baymax");
+   // store.clear(); // Clear store.js object for testing
+  
+    // store.set("username", "lynn");
+    
+    // Implementation of store.js object - name is working, but EVENT DATA NOT PERSISTING ACROSS SESSIONS
     console.log(store.get("username"));
-    store.set("username", "Mulan");
-    console.log(store.get("username"));
-    store.set("storedEvents", {
-        "eventName": [],
-        "eventStatus": []
-    });
+    if (store.get("storedEvents") == null) {  
+        store.set("storedEvents", {
+            "eventName": [],
+            "eventStatus": []
+        });
+        console.log("was null");
+    }
     storedEvents = store.get("storedEvents");
-    console.dir(storedEvents);
-    storedEvents.eventName.push("event 1");
-    storedEvents.eventName.push("event 2");
-    storedEvents.eventStatus.push("active");
-    console.dir(storedEvents);
+    // storedEvents.eventName.push("1");
+    // storedEvents.eventName.push("2");
+    console.log(store.get("storedEvents"));
 
     
     // modal handlers                                       
