@@ -3,10 +3,11 @@ var map;
 var infoWindow = new google.maps.InfoWindow;
 var markers = new Array();
 var events; // Results returned by NYT API
-var clickedEventId;
+var selectedEventId;
 var storedEvents; // Used in store.js object for persistent event data storage across user sessions
 var offset = 0;
 var listCounter = 1; // Used to number search results in infoWindow
+var selectedUserId;
 
 var username = "default";
 
@@ -294,7 +295,7 @@ function addEvent(event, index){
 
     // open event modal on marker click
     google.maps.event.addListener(markers[markers.length-1], 'click', function() {
-        clickedEventId = this.id;
+        selectedEventId = this.id;
         showModal("event");
     });
 
@@ -319,7 +320,7 @@ function addEvent(event, index){
 
     // attach handlers to the text in the infoWindow; actions are same as with markers
     $(markerInfo).click(function(){
-        clickedEventId = this.id;
+        selectedEventId = this.id;
         showModal("event");
     });
     $(markerInfo).mouseover(function(){
@@ -349,11 +350,14 @@ function showPrevious(){
 // ********************************************** event modal methods **********************************************
 
 function initEventModal(){
-    $("#eventTitle").html(events[clickedEventId].event_name);
+    $("#eventTitle").html(events[selectedEventId].event_name);
+    // close modal by calling closeModal();
 }
 
 // ********************************************** profile modal methods **********************************************
 
 function initProfileModal(){
+    // open by calling showModal("profile") and setting selectedUserId to appropriate id; should be opened from eventModal
+    var id = selectedUserId;
     
 }
