@@ -6,24 +6,25 @@ var events; // Results returned by NYT API
 var clickedEventId;
 var storedEvents; // Used in store.js object for persistent event data storage across user sessions
 var offset = 0;
+var listCounter = 1; // Used to number search results in infoWindow
 
 $(document).ready(function(){
-   // store.clear(); // Clear store.js object for testing
-  
-    // store.set("username", "lynn");
+    // store.clear(); // Clear store.js object for testing
+    
+    // storedEvents.eventName.push("1");
+    // storedEvents.eventName.push("2");
     
     // Implementation of store.js object - name is working, but EVENT DATA NOT PERSISTING ACROSS SESSIONS
-    console.log(store.get("username"));
-    if (store.get("storedEvents") == null) {  
-        store.set("storedEvents", {
+    if (store.get("eventArray") == null) {  
+        store.set("eventArray", {
             "eventName": [],
             "eventStatus": []
         });
-        console.log("was null");
+        console.log("events was null");
     }
-    storedEvents = store.get("storedEvents");
-    // storedEvents.eventName.push("1");
-    // storedEvents.eventName.push("2");
+    storedEvents = store.get("eventArray");
+    storedEvents.eventName.push("1");
+    storedEvents.eventName.push("2");
     console.log(store.get("storedEvents"));
 
     
@@ -150,6 +151,9 @@ function search(){
         markers[i].setMap(null);
     }
     markers = new Array();
+    
+    // Reset numbering in list of search results
+    listCounter = 1;
     
     var query = getSearchQuery();
     
@@ -308,8 +312,9 @@ function addEvent(event, index){
     var markerInfo = document.createElement("div");
     markerInfo.setAttribute("class", "eventListItem");
     markerInfo.id = index;
-    markerInfo.innerHTML = event.event_name;
+    markerInfo.innerHTML = "<b>" + (listCounter) + ". </b>" + event.event_name;
     $("#infoWindow").append(markerInfo);
+    ++listCounter; // Increment numbering on list
 
     // attach handlers to the text in the infoWindow; actions are same as with markers
     $(markerInfo).click(function(){
