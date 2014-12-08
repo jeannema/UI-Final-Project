@@ -5,6 +5,8 @@ var markers = new Array();
 var events; // Results returned by NYT API
 var selectedEventId;
 var storedEvents; // Used in store.js object for persistent event data storage across user sessions
+var localEventNames; // Local copy of stored event names
+var localEventURLs; // Local copy of stored event URLs
 var offset = 0;
 var listCounter = 1; // Used to number search results in infoWindow
 var selectedUserId;
@@ -20,8 +22,8 @@ var usersAttending = [user1, user2, user3];
 
 $(document).ready(function(){
     /* **********Begin local storage implementation********** */
-        localEventNames = [];
-        localEventURLs = [];
+    
+    //IF YOU WANT TO CLEAR ALL LOCAL STORAGE VALUES FOR DEBUGGING: store.clear();
     
     // If there is no stored data, create storedEvents object
     if (store.get("userEvents") == null) {
@@ -32,22 +34,10 @@ $(document).ready(function(){
     }
     storedEvents = store.get("userEvents");
     
-    // Local variables should hold existing stored values at beginning of each session
-    var localEventNames = storedEvents.eventNames;
-    var localEventURLs = storedEvents.eventURLs;
+    // Initialize local variables with existing stored values at beginning of each session
+    localEventNames = storedEvents.eventNames;
+    localEventURLs = storedEvents.eventURLs;
     
-    console.log(localEventNames);
-    console.log(localEventURLs);
-
-    // localEventNames.push("event 1", "event 2");
-    // localEventURLs.push("WOW LINK", "MOAR");
-    
-    // Replaces old stored object with new one
-    store.set("userEvents", {
-        eventNames: localEventNames,
-        eventURLs: localEventURLs
-    });
-
     /* **********End of local storage implementation********** */
     
     // modal handlers                                       
@@ -415,7 +405,21 @@ function initEventModal(){
     // close modal by calling closeModal();
 }
 
-
+// @elisha - this just stores event names and URLS for now, feel free to add anything you think we want to display on front-end!
+$(document).on("click", "#attendingButton", function attendEvent() {
+    // Add event to local copies
+    localEventNames.push(events[selectedEventId].event_name);
+    localEventURLs.push(events[selectedEventId].event_detail_url);
+    
+    console.log("added new values: " + localEventNames); // debugging
+    console.log("added new values: " + localEventURLs); // debugging
+    
+    // Replaces stored object with local values
+    store.set("userEvents", {
+        eventNames: localEventNames,
+        eventURLs: localEventURLs
+    });
+});
 
 // ********************************************** profile modal methods **********************************************
 
