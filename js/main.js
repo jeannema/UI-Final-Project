@@ -6,6 +6,7 @@ var events; // Results returned by NYT API
 var clickedEventId;
 var storedEvents; // Used in store.js object for persistent event data storage across user sessions
 var offset = 0;
+var listCounter = 1; // Used to number search results in infoWindow
 
 var username = "default";
 
@@ -25,7 +26,7 @@ $(document).ready(function(){
 
         // display new likes
         console.log(user.likes);
-//
+
     
     // modal handlers                                       
     $("#searchLink").click(function(){
@@ -150,6 +151,9 @@ function search(){
         markers[i].setMap(null);
     }
     markers = new Array();
+    
+    // Reset numbering in list of search results
+    listCounter = 1;
     
     var query = getSearchQuery();
     
@@ -308,8 +312,9 @@ function addEvent(event, index){
     var markerInfo = document.createElement("div");
     markerInfo.setAttribute("class", "eventListItem");
     markerInfo.id = index;
-    markerInfo.innerHTML = event.event_name;
+    markerInfo.innerHTML = "<b>" + (listCounter) + ". </b>" + event.event_name;
     $("#infoWindow").append(markerInfo);
+    ++listCounter; // Increment numbering on list
 
     // attach handlers to the text in the infoWindow; actions are same as with markers
     $(markerInfo).click(function(){

@@ -107,7 +107,7 @@ html, body {
     margin-top: 15px;
 }
 
-/* info window styles */
+/* Contains list of search results */
 #infoWindow{
     position: fixed;
     right: 15px;
@@ -117,7 +117,7 @@ html, body {
     text-align:center;
     z-index: 500;
     background-color: #ffffff;
-    opacity: 0.9;
+    opacity: 0.98;
     border-radius: 15px;
 }
 
