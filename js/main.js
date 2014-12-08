@@ -425,5 +425,6 @@ function initProfileModal(){
     var userHtml = '<img src="' + user1.img + '" style = "max-height: 640px; max-width: 90%" alt=""/>';
     $("#userPic").html(userHtml);
     var infoHtml = '<h1>' + user1.name + '</h1><b>Age: </b>' + user1.age + '</br><b>Hometown: </b>' + user1.hometown + '</br><b>About Me: </b>' + user1.aboutme;
+    $("#userInfo").html(infoHtml);
     
 }
