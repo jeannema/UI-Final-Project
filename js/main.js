@@ -180,6 +180,7 @@ function search(){
                     
                     // only display results in new york city
                     if (events[i].city == "New York" ||
+                        events[i].city == "New York " ||
                         events[i].city == "Bronx" ||
                         events[i].city == "Brooklyn" ||
                         events[i].city == "Queens" ||
