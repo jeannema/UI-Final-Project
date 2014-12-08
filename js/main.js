@@ -7,25 +7,25 @@ var clickedEventId;
 var storedEvents; // Used in store.js object for persistent event data storage across user sessions
 var offset = 0;
 
-$(document).ready(function(){
-   // store.clear(); // Clear store.js object for testing
-  
-    // store.set("username", "lynn");
-    
-    // Implementation of store.js object - name is working, but EVENT DATA NOT PERSISTING ACROSS SESSIONS
-    console.log(store.get("username"));
-    if (store.get("storedEvents") == null) {  
-        store.set("storedEvents", {
-            "eventName": [],
-            "eventStatus": []
-        });
-        console.log("was null");
-    }
-    storedEvents = store.get("storedEvents");
-    // storedEvents.eventName.push("1");
-    // storedEvents.eventName.push("2");
-    console.log(store.get("storedEvents"));
+var username = "default";
 
+$(document).ready(function(){
+        // set initial username and likes
+        var likes = ["1", "2"];
+        store.set("user", { name: username, likes: likes });
+    
+        // display likes
+        var user = store.get("user");
+        console.log(user.likes);
+    
+        // add new likes
+        var userLikes = user.likes;
+        userLikes.push("3");
+        store.set("user", { name: username, likes: userLikes });
+
+        // display new likes
+        console.log(user.likes);
+//
     
     // modal handlers                                       
     $("#searchLink").click(function(){
