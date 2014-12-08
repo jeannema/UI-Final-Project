@@ -11,6 +11,13 @@ var selectedUserId;
 
 var username = "default";
 
+// list of users
+var user1 = {name:"Baymax", message:0, age:20, hometown:'San Francisco, California', aboutme: 'I am an oversized inflatable robot created by Tadashi to help treat and diagnose people.', img: 'img/baymax.png'};
+var user2 = {name:"Juliet James", message:0, age:18, hometown: 'New York, NY', aboutme: 'College Freshman at Columbia. I love to explore the local art scenes!', img: 'img/honeylemon.png'};
+var user3 = {name:"Romeo Ryan", message:1, age:24, hometown: 'Dallas, TX', aboutme: ''};
+var allUsers = [user1, user2, user3];
+var usersAttending = [user1, user2, user3];
+
 $(document).ready(function(){
         // set initial username and likes
         var likes = ["1", "2"];
@@ -167,6 +174,7 @@ function search(){
         success: function(data)
         {  
             events = data.results;
+            console.log(events)
 
             // check to see if there are results
             if (events.length > 0){
@@ -345,19 +353,63 @@ function showPrevious(){
 
 /*---------- End of search methods ----------*/
 
-
 // @elisha
 // ********************************************** event modal methods **********************************************
 
 function initEventModal(){
     $("#eventTitle").html(events[selectedEventId].event_name);
+    $("#eventTitle").click(function(){
+        window.open(events[selectedEventId].event_detail_url)
+    });
+    $("#eventInfo").html(
+        '</br><b>Category: </b>' + events[selectedEventId].category +
+        '</br><b>Date/Time: </b>' + events[selectedEventId].date_time_description + 
+        '</br><b>Description:</b><br>' + 
+        events[selectedEventId].web_description + '</br>' +
+        '<b><u>Venue Information: </b></u>' + 
+        '</br><a href="' + events[selectedEventId].venue_website + '">' + events[selectedEventId].venue_name + '</a>' +
+        '</br><b>Address: </b></br>' + events[selectedEventId].street_address + 
+        '</br>' + events[selectedEventId].city + ', ' + events[selectedEventId].state + ' ' + events[selectedEventId].postal_code +
+        '</br><b>Borough: </b>' + events[selectedEventId].borough + ' | ' + '<b>Neigborhood: </b>' + events[selectedEventId].neighborhood +
+        '</br><b> Telephone: </b>' +  events[selectedEventId].telephone
+
+    );
+
+    var user1 = {name:"John Doe", message:0};
+    var user2 = {name:"Sally Sue", message:0};
+    var user3 = {name:"Mary Lee", message:1};
+    var usersAttending = [user1, user2, user3];
+    htmlcode = '<h4><center><u>Attendees</u></center></h4><div class="panel-body"><ul class="list-group" style="list-style-type:none">';
+    for (var list in usersAttending){
+        var item = usersAttending[list]
+        var list = '<li class="list-group-item">';
+        var name = item.name;
+        var mess = item.message;
+        list += name;
+        if (mess == 0) {
+            list += '\t' + '<button type="button" class="btn btn-xs btn-primary pull-right"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></button>'
+        } else {
+            list += '\t' + '<button type="button" class="btn btn-xs btn-primary pull-right" disabled="disabled"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></button>'
+        }
+
+        htmlcode += list + '</li>'
+    }
+    htmlcode += '</ul></div>'
+    $("#attendees").html(htmlcode);
+
     // close modal by calling closeModal();
 }
+
+
 
 // ********************************************** profile modal methods **********************************************
 
 function initProfileModal(){
     // open by calling showModal("profile") and setting selectedUserId to appropriate id; should be opened from eventModal
     var id = selectedUserId;
+    var userHtml = '<img src="' + user1.img + '" style = "max-height: 640px; max-width: 90%" alt=""/>';
+    $("#userPic").html(userHtml);
+    var infoHtml = '<h1>' + user1.name + '</h1><b>Age: </b>' + user1.age + '</br><b>Hometown: </b>' + user1.hometown + '</br><b>About Me: </b>' + user1.aboutme;
+    $("#userInfo").html(infoHtml);
     
 }
