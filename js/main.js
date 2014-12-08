@@ -11,22 +11,36 @@ var listCounter = 1; // Used to number search results in infoWindow
 var username = "default";
 
 $(document).ready(function(){
-        // set initial username and likes
-        var likes = ["1", "2"];
-        store.set("user", { name: username, likes: likes });
+    /* **********Begin local storage implementation********** */
+        localEventNames = [];
+        localEventURLs = [];
     
-        // display likes
-        var user = store.get("user");
-        console.log(user.likes);
+    // If there is no stored data, create storedEvents object
+    if (store.get("userEvents") == null) {
+        store.set("userEvents", {
+            eventNames: [],
+            eventURLs: []
+        });
+    }
+    storedEvents = store.get("userEvents");
     
-        // add new likes
-        var userLikes = user.likes;
-        userLikes.push("3");
-        store.set("user", { name: username, likes: userLikes });
+    // Local variables should hold existing stored values at beginning of each session
+    var localEventNames = storedEvents.eventNames;
+    var localEventURLs = storedEvents.eventURLs;
+    
+    console.log(localEventNames);
+    console.log(localEventURLs);
 
-        // display new likes
-        console.log(user.likes);
+    // localEventNames.push("event 1", "event 2");
+    // localEventURLs.push("WOW LINK", "MOAR");
+    
+    // Replaces old stored object with new one
+    store.set("userEvents", {
+        eventNames: localEventNames,
+        eventURLs: localEventURLs
+    });
 
+    /* **********End of local storage implementation********** */
     
     // modal handlers                                       
     $("#searchLink").click(function(){
@@ -136,9 +150,14 @@ function hideAdvancedSearchFields(){
     $('#searchModal').animate({'top': '24%'}, { duration: 600, queue: false });
 }
 
-// new search (set offset to 0)
+// New search
 function newSearch(){
+    // Reset offset
     offset = 0;
+    
+    // Reset numbering in list of search results
+    listCounter = 1;
+    
     search();
 }
 
@@ -151,10 +170,6 @@ function search(){
         markers[i].setMap(null);
     }
     markers = new Array();
-    
-    // Reset numbering in list of search results
-    listCounter = 1;
-    
     var query = getSearchQuery();
     
     // get data
@@ -204,7 +219,7 @@ function search(){
                 var previousLink = "";
                 var nextLink = "";
                 if (offset != 0) {
-                    if (events.length < 20)
+                    if (events.length < 20) // If we're on last page of search results, don't display Next
                         previousLink = "<p class='previousNextLink' onclick='showPrevious();'>Previous</p>";
                     else{
                         previousLink = "<p class='previousNextLink' onclick='showPrevious();' style='float:left; padding-left:40px;'>Previous</p>";
