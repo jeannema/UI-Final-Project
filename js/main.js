@@ -589,7 +589,7 @@ function initProfileModal(){
             attendingHtml += '<tr><td>' + '<a href="' + url[i] + '">' + names[i]+ '</a></td><td>'
             attendingHtml += messageButton
             inputEvent = "'" + names[i] + "'"
-            attendingHtml += '<td align = "pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="eventUser" href="#" onclick="removeEvent(' + inputEvent + ')">' + 'Remove Event' + '</a></td></tr>'
+            attendingHtml += '<td align = "pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="eventUser" href="#" style="color: #CC0000" onclick="removeEvent(' + inputEvent + ')">' + 'Remove Event' + '</a></td></tr>'
         }
     } else {
         attendingHtml = '<ul class="list-group">'
