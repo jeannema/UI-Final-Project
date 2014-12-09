@@ -82,9 +82,9 @@
         
         <div id="messageModal" class="modalPopup" style="display:none">
             <h1 id="messageTitle"></h1><br>
-            <input type="text" placeholder="Subject" class="searchField"></input>
+            <input id="messageSubject" type="text" placeholder="Subject" class="searchField"></input>
             <br>
-            <textarea style="height:100px;" class="searchField" placeholder="Message"></textarea>
+            <textarea id="messageBody" style="height:100px;" class="searchField" placeholder="Message"></textarea>
             <br>
             <a href="#" id="sendMessageButton" class="btn btn-success" onclick="sendMessage();">Send Message</a>
             <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>

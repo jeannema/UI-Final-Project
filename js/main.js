@@ -83,7 +83,12 @@ $(document).ready(function(){
 
 // show modal
 function showModal(type) {
-    closeModal();
+    // close all other modal windows
+    $("#searchModal").fadeOut("fast");
+    $("#eventModal").fadeOut("fast");
+    $("#profileModal").fadeOut("fast");
+    $("#messageModal").fadeOut("fast");
+    
     $("#modalWindow").fadeIn("slow");
     if (type == "search")
         $("#searchModal").fadeIn("slow");
@@ -515,12 +520,13 @@ function initProfileModal(){
 function initMessageModal(name){
     if (name != null)
         $("#messageTitle").text("Send a message to " + name);
+    $("#messageSubject").val("");
+    $("#messageBody").val("");
 }
 
 function sendMessage(){
     var title = $("#messageTitle").text().split("Send a message to ");
     var name = title[title.length-1];
     toastr.success("Message sent to " + name + "!");
-    closeModal();
     showModal("event");
 }
