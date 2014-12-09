@@ -189,7 +189,8 @@ function search(){
     }
     markers = new Array();
     var query = getSearchQuery();
-    
+    if (query == null)  return;
+        
     // get data
     $.ajax({
         type: "GET",
@@ -281,18 +282,26 @@ function getSearchQuery(){
     
     // get current date format - only search events with min date of today
     var today = new Date();
+    var year = today.getFullYear();
+    var nextYear = today.getFullYear();
     var day = today.getDate();
     var month = today.getMonth() + 1;
-    var year = today.getFullYear();
+    var nextMonth = today.getMonth() + 2;
+    if (nextMonth == 13) {
+        nextMonth = 1;
+        nextYear++;
+    }
+    
     if (day < 10)       day = "0" + day;
     if (month < 10)     month = "0" + month;
+    if (nextMonth < 10) nextMonth = "0" + nextMonth;
     
     // formulate query
     query += "date_range=";
     if (minDate.length > 0)                         query += minDate + "%3A";
-    else                                            query += year + "-" + month + "-" + day + "01%3A";
+    else                                            query += year + "-" + month + "-" + day + "%3A";
     if (maxDate.length > 0)                         query += maxDate + "&";
-    else                                            query += "2015-01-01&";
+    else                                            query += nextYear + "-" + nextMonth + "-" + day + "&";
     if (search.length > 0)                          query += "query=" + search + "&filters=";
     if (query.substring(query.length-1) == "&")     query += "filters=";
     if (neighborhood && neighborhood.length > 0)    query += "neighborhood:%22" + neighborhood + "%22,";
@@ -305,6 +314,16 @@ function getSearchQuery(){
         alert("If searching by date, please also fill another search field");
         return;
     }
+    
+    //cannot have empty search
+    if (minDate.length == 0 && maxDate.length == 0 && search.length == 0 && !(neighborhood && neighborhood.length > 0)
+       && !(eventType && eventType.length > 0) && !free && !kid){
+        alert("Please enter one or more search terms");
+        return;
+    }
+    
+    if (query.substring(query.length-1) == "?")
+        alert("Please enter one or more search terms");
     // get rid of last comma
     if (query.substring(query.length-1) == ",")
         query = query.substring(0, query.length - 1);
