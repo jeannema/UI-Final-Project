@@ -50,8 +50,8 @@ html, body {
 /* @elisha: change size/positioning of event and profile modals here*/
 #eventModal{
     width: 50%;
-    height: 47%;
-    top: 24%;
+    height: 70%;
+    top: 17%;
     overflow: scroll;   
 }
 

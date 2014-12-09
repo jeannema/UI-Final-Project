@@ -14,6 +14,7 @@ var selectedUserId;
 var username = "default";
 
 // list of users
+var currentUser = {name:"CurrentTest", message:0, age:20, hometown:'San Francisco, California', aboutme: 'I am an oversized inflatable robot created by Tadashi to help treat and diagnose people.', img: 'img/baymax.png'};
 var user1 = {name:"Baymax", message:0, age:20, hometown:'San Francisco, California', aboutme: 'I am an oversized inflatable robot created by Tadashi to help treat and diagnose people.', img: 'img/baymax.png'};
 var user2 = {name:"Juliet James", message:0, age:18, hometown: 'New York, NY', aboutme: 'College Freshman at Columbia. I love to explore the local art scenes!', img: 'img/honeylemon.png'};
 var user3 = {name:"Romeo Ryan", message:1, age:24, hometown: 'Dallas, TX', aboutme: ''};
@@ -83,6 +84,7 @@ $(document).ready(function(){
 
 // show modal
 function showModal(type) {
+    closeModal();
     $("#modalWindow").fadeIn("slow");
     if (type == "search")
         $("#searchModal").fadeIn("slow");
@@ -416,41 +418,61 @@ function initEventModal(){
 
     console.log(eventHtml)
     $("#eventInfo").html(eventHtml);
-    htmlcode = '<h4><center><u>Attendees</u></center></h4><div class="panel-body"><ul class="list-group" style="list-style-type:none">';
-    for (var list in usersAttending){
-        var item = usersAttending[list]
-        var list = '<li class="list-group-item">';
-        var name = item.name;
-        var mess = item.message;
-        list += name;
-        if (mess == 0) {
-            list += '\t' + '<button type="button" class="btn btn-xs btn-primary pull-right" onclick="initMessageModal(\'' + item.name + '\'); showModal(\'message\')"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></button>'
-        } else {
-            list += '\t' + '<button type="button" class="btn btn-xs btn-primary pull-right" disabled="disabled"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></button>'
-        }
-
-        htmlcode += list + '</li>'
-    }
+    htmlcode = '<h4><center><u>Attendees</u></center></h4><div class="panel-body"><ul id="attendeesList" class="list-group" style="list-style-type:none">';
+    htmlcode += generateAttendeeList();
     htmlcode += '</ul></div>'
     $("#attendees").html(htmlcode);
 
     // close modal by calling closeModal();
 }
 
+function generateAttendeeList(){
+    var htmlcode = "";
+    for (var list in usersAttending){
+            var item = usersAttending[list]
+            var list = '<li class="list-group-item">';
+            var name = item.name;
+            var mess = item.message;
+            list += name;
+            if (mess == 0) {
+                list += '\t' + '<button type="button" class="btn btn-xs btn-primary pull-right" onclick="initMessageModal(\'' + item.name + '\'); showModal(\'message\')"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></button>'
+            } else {
+                list += '\t' + '<button type="button" class="btn btn-xs btn-primary pull-right" disabled="disabled"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></button>'
+            }
+        htmlcode += list + '</li>'
+    }
+    return htmlcode;
+}
 // @elisha - this just stores event names and URLS for now, feel free to add anything you think we want to display on front-end!
 $(document).on("click", "#attendingButton", function attendEvent() {
-    // Add event to local copies
-    localEventNames.push(events[selectedEventId].event_name);
-    localEventURLs.push(events[selectedEventId].event_detail_url);
-    
-    console.log("added new values: " + localEventNames); // debugging
-    console.log("added new values: " + localEventURLs); // debugging
-    
-    // Replaces stored object with local values
-    store.set("userEvents", {
-        eventNames: localEventNames,
-        eventURLs: localEventURLs
-    });
+    if ($("#attendingButton").text() == "Mark as attending"){
+        // Add event to local copies
+        localEventNames.push(events[selectedEventId].event_name);
+        localEventURLs.push(events[selectedEventId].event_detail_url);
+
+        console.log("added new values: " + localEventNames); // debugging
+        console.log("added new values: " + localEventURLs); // debugging
+
+        // Replaces stored object with local values
+        store.set("userEvents", {
+            eventNames: localEventNames,
+            eventURLs: localEventURLs
+        });
+        
+        usersAttending.push(currentUser);
+        $("#attendeesList").html(generateAttendeeList());
+        $("#attendingButton").text("Mark as not attending");
+        $("#attendingButton").removeClass( "btn-success" ).addClass( "btn-danger" );
+
+    }
+    else if ($("#attendingButton").text() == "Mark as not attending"){
+        // @lynn TODO: delete from local storage
+        var index = usersAttending.indexOf(currentUser.name);
+        usersAttending.splice(index, 1);
+        $("#attendeesList").html(generateAttendeeList());
+        $("#attendingButton").text("Mark as attending");
+        $("#attendingButton").removeClass( "btn-danger" ).addClass( "btn-success" );
+    }
 });
 
 // ********************************************** profile modal methods **********************************************
