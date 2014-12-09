@@ -383,9 +383,8 @@ function showPrevious(){
 
 function initEventModal(){
     $("#eventTitle").html(events[selectedEventId].event_name);
-    $("#eventTitle").click(function(){
-        window.open(events[selectedEventId].event_detail_url)
-    });
+    $("#eventTitle").attr("href", events[selectedEventId].event_detail_url);
+
     var eventHtml = ''
     if (events[selectedEventId].category !== undefined) {
         eventHtml += '</br><b>Category: </b>' + events[selectedEventId].category
@@ -399,7 +398,7 @@ function initEventModal(){
     eventHtml += '</br><b><u>Venue Information: </b></u>'
 
     if ((events[selectedEventId].venue_website !== undefined) && (events[selectedEventId].venue_name !== undefined)){
-        eventHtml += '</br><a href="' + events[selectedEventId].venue_website + '">' + events[selectedEventId].venue_name + '</a>'
+        eventHtml += '</br><a target="_blank" href="http://' + events[selectedEventId].venue_website + '">' + events[selectedEventId].venue_name + '</a>'
     } else if (events[selectedEventId].venue_name !== undefined) {
         eventHtml += '</br>' + events[selectedEventId].venue_name
     }
