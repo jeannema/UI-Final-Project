@@ -19,7 +19,7 @@ var user2 = {name:"Juliet James", message:0, age:18, hometown: 'New York, NY', a
 var user3 = {name:"Romeo Ryan", message:1, age:24, hometown: 'Dallas, TX', aboutme: ''};
 var allUsers = [user1, user2, user3];
 var usersAttending = [user2, user3];
-
+var defaultusersAttending = [user2, user3]; // usersAttending gets set back to default for each new event modal
 $(document).ready(function(){
     /* **********Begin local storage implementation********** */
     
@@ -423,14 +423,25 @@ function initEventModal(){
     console.log(eventHtml)
     $("#eventInfo").html(eventHtml);
     htmlcode = '<h4><center><u>Attendees</u></center></h4><div class="panel-body"><ul id="attendeesList" class="list-group" style="list-style-type:none">';
-    htmlcode += generateAttendeeList();
+    htmlcode += generateAttendeeList(true);
     htmlcode += '</ul></div>'
     $("#attendees").html(htmlcode);
 
     // close modal by calling closeModal();
 }
 
-function generateAttendeeList(){
+function generateAttendeeList(init){
+    if (init){
+        usersAttending = defaultusersAttending.slice(0);
+        // make sure button is green
+        $("#eventMessageStatus").hide();
+        $("#attendingButton").text("Mark as attending");
+        $("#attendingButton").removeClass( "btn-danger" ).addClass( "btn-success" );
+    }
+    var clickedEventName = events[selectedEventId].event_name;
+    var storedEvents = store.get("userEvents").eventNames;
+    if(init && storedEvents.indexOf(clickedEventName) >= 0 && usersAttending.indexOf(user1) == -1)
+        toggleAttendingButton();
     var htmlcode = "";
     for (var list in usersAttending){
             var item = usersAttending[list]
@@ -449,20 +460,26 @@ function generateAttendeeList(){
 }
 // @elisha - this just stores event names and URLS for now, feel free to add anything you think we want to display on front-end!
 $(document).on("click", "#attendingButton", function attendEvent() {
+    toggleAttendingButton(true);
+});
+
+function toggleAttendingButton(clicked){
     if ($("#attendingButton").text() == "Mark as attending"){
-        // Add event to local copies
-        localEventNames.push(events[selectedEventId].event_name);
-        localEventURLs.push(events[selectedEventId].event_detail_url);
+            
+        if (clicked && localEventNames.indexOf(events[selectedEventId].event_name) == -1){
+            // Add event to local copies
+            localEventNames.push(events[selectedEventId].event_name);
+            localEventURLs.push(events[selectedEventId].event_detail_url);
 
-        console.log("added new values: " + localEventNames); // debugging
-        console.log("added new values: " + localEventURLs); // debugging
+            console.log("added new values: " + localEventNames); // debugging
+            console.log("added new values: " + localEventURLs); // debugging
 
-        // Replaces stored object with local values
-        store.set("userEvents", {
-            eventNames: localEventNames,
-            eventURLs: localEventURLs
-        });
-        
+            // Replaces stored object with local values
+            store.set("userEvents", {
+                eventNames: localEventNames,
+                eventURLs: localEventURLs
+            });
+        }
         usersAttending.push(user1);
         $("#attendeesList").html(generateAttendeeList());
         $("#eventMessageStatus").show();
@@ -471,7 +488,19 @@ $(document).on("click", "#attendingButton", function attendEvent() {
 
     }
     else if ($("#attendingButton").text() == "Mark as not attending"){
-        // @lynn TODO: delete from local storage
+
+        // remove event fromt local copies
+        var index = localEventNames.indexOf(events[selectedEventId].event_name);
+        localEventNames.splice(index, 1);
+        index = localEventURLs.indexOf(events[selectedEventId].event_detail_url);
+        localEventURLs.splice(index, 1);
+        
+        // Replaces stored object with local values
+        store.set("userEvents", {
+            eventNames: localEventNames,
+            eventURLs: localEventURLs
+        });
+        
         var index = usersAttending.indexOf(user1.name);
         usersAttending.splice(index, 1);
         $("#attendeesList").html(generateAttendeeList());
@@ -479,8 +508,7 @@ $(document).on("click", "#attendingButton", function attendEvent() {
         $("#attendingButton").text("Mark as attending");
         $("#attendingButton").removeClass( "btn-danger" ).addClass( "btn-success" );
     }
-});
-
+}
 // ********************************************** profile modal methods **********************************************
 
 function initProfileModal(){
