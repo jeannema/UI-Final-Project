@@ -589,9 +589,11 @@ function initProfileModal(){
             attendingHtml += '<td align = "pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="eventUser" href="#" onclick="removeEvent(' + inputEvent + ')">' + 'Remove Event' + '</a></td></tr>'
         }
     } else {
+        attendingHtml = '<ul class="list-group">'
         for (var i in names) {
-            attendingHtml += '<tr>' + '<a href="' + url[i] + '">' + names[i]+ '</a></tr>'
+            attendingHtml += '<li class="list-group-item">' + '<a href="' + url[i] + '">' + names[i]+ '</a></li>'
         }
+        attendingHtml += '</ul>'
     }
     $("#eventTable").html(attendingHtml);
 }
