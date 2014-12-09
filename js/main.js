@@ -573,21 +573,43 @@ function initProfileModal(){
     url = storedEvents.eventURLs
     console.log(url)
 
-    if (user1.message == 0) {
-        messageButton = '<form class="form-inline" role="form"><div class="form-group"><select class="form-control input-sm"><option>Message</option>'
-        messageButton += '<option>Do not Message</option></select></div><button type="message" class="btn btn-xs btn-primary pull-right">Update</button></form>'
+    if (selectedUserId == 1) {
+
+        if (user.message == 0) {
+            messageButton = '<form class="form-inline" role="form"><div class="form-group"><select class="form-control input-sm"><option>Message</option>'
+            messageButton += '<option>Do not Message</option></select></div><button type="message" class="btn btn-xs btn-primary pull-right">Update</button></form>'
+        } else {
+            messageButton = '<form class="form-inline" role="form"><div class="form-group"><select class="form-control input-sm"><option>Do Not Message</option>'
+            messageButton += '<option>Message</option></select></div><button type="message" class="btn btn-xs btn-primary pull-right">Update</button></form>'
+        }
+        for (var i in names) {
+            attendingHtml += '<tr><td>' + '<a href="' + url[i] + '">' + names[i]+ '</a></td><td>'
+            attendingHtml += messageButton
+            inputEvent = "'" + names[i] + "'"
+            attendingHtml += '<td align = "pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="eventUser" href="#" onclick="removeEvent(' + inputEvent + ')">' + 'Remove Event' + '</a></td></tr>'
+        }
     } else {
-        messageButton = '<form class="form-inline" role="form"><div class="form-group"><select class="form-control input-sm"><option>Do Not Message</option>'
-        messageButton += '<option>Message</option></select></div><button type="message" class="btn btn-xs btn-primary pull-right">Update</button></form>'
-    }
-    for (var i in names) {
-        attendingHtml += '<tr><td>' + '<a href="' + url[i] + '">' + names[i]+ '</a></td><td>'
-        attendingHtml += messageButton
-        attendingHtml += '<td align = "pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Remove Event</td></tr>'
+        for (var i in names) {
+            attendingHtml += '<tr>' + '<a href="' + url[i] + '">' + names[i]+ '</a></tr>'
+        }
     }
     $("#eventTable").html(attendingHtml);
 }
 
+function removeEvent(eventName) {
+    storedEvents = store.get("userEvents");
+    localEventNames = storedEvents.eventNames;
+    localEventURLs = storedEvents.eventURLs;
+
+    var index = localEventNames.indexOf(eventName)
+    localEventNames.splice(index, 1)
+    localEventURLs.splice(index, 1)
+
+    storedEvents.eventNames = localEventNames
+    storedEvents.eventURLs = localEventNames
+
+    initProfileModal()
+}
 
 
 function initMessageModal(name){
