@@ -15,12 +15,17 @@ var eventsPerPage = 20; // Total number of results to display per page
 var username = "default";
 
 // list of users
-var user1 = {name:"Baymax", message:0, age:20, hometown:'San Francisco, California', aboutme: 'I am an oversized inflatable robot created by Tadashi to help treat and diagnose people.', img: 'img/baymax.png'};
-var user2 = {name:"Juliet James", message:0, age:18, hometown: 'New York, NY', aboutme: 'College Freshman at Columbia. I love to explore the local art scenes!', img: 'img/honeylemon.png'};
-var user3 = {name:"Romeo Ryan", message:1, age:24, hometown: 'Dallas, TX', aboutme: ''};
-var allUsers = [user1, user2, user3];
-var usersAttending = [user2, user3];
-var defaultusersAttending = [user2, user3]; // usersAttending gets set back to default for each new event modal
+var user1 = {name:"Baymax", message:0, age:5, hometown:'San Francisco, California', aboutme: 'I am an oversized inflatable robot created by Tadashi to help treat and diagnose people.', img: 'img/baymax.png'};
+var user2 = {name:"Honey Lemon", message:0, age:22, hometown: 'Orlando, Florida', aboutme: 'College Freshman at Columbia. I love to explore the local art scenes!', img: 'img/honeylemon.png'};
+var user3 = {name:"Hiro Hamada", message:1, age:14, hometown: 'San Francisco, California', aboutme: 'Founder and leader of Big Hero 6. I love to code and battle bots', img: 'img/hiro.png'};
+var user4 = {name:"Fred", message:1, age:24, hometown: 'Seattle, Washington', aboutme: 'Sign-Twirling, Monster Loving, comic-book aficionado', img: 'img/fred.png'};
+var user5 = {name:"Go Go Tomago", message:1, age:23, hometown: 'New York, New York', aboutme: 'I have a need for speed. Tough. Ahtletic. Loyal', img: 'img/gogo.png'};
+var user6 = {name:"Wasabi", message:0, age:24, hometown: 'Dallas, Texas', aboutme: 'Might be a bit neurotic, but hey, I care.', img: 'img/wasabi.png'};
+
+var allUsers = {1:user1, 2:user2, 3:user3, 4:user4, 5:user5, 6:user6};
+var usersAttending = [user2, user3, user4, user5, user6];
+var defaultusersAttending = [user2, user3, user4, user6]; // usersAttending gets set back to default for each new event modal
+
 $(document).ready(function(){
     /* **********Begin local storage implementation********** */
     
@@ -50,6 +55,7 @@ $(document).ready(function(){
     });
     // FOR DEBUGGING; take out later
     $("#profileLink").click(function(){
+        selectedUserId = 1;
         showModal("profile");  
     });
     $("#messageLink").click(function(){
@@ -451,6 +457,19 @@ function initEventModal(){
     // close modal by calling closeModal();
 }
 
+function updateSelectedUser(name) {
+    for (var key in allUsers) {
+        user = allUsers[key]
+        if (user.name == name) {
+            selectedUserId = key
+            break;
+        }
+    }
+    showModal("profile");
+    console.log(selectedUserId)
+}
+
+
 function generateAttendeeList(init){
     if (init){
         usersAttending = defaultusersAttending.slice(0);
@@ -468,8 +487,10 @@ function generateAttendeeList(init){
             var item = usersAttending[list]
             var list = '<li class="list-group-item">';
             var name = item.name;
+            var inputName = "'" + name + "'"
             var mess = item.message;
-            list += name;
+            list += '<a id="eventUser" href="#" onclick="updateSelectedUser(' + inputName + ')">' + name + '</a>'
+            console.log(list)
             if (mess == 0) {
                 list += '\t' + '<button type="button" class="btn btn-xs btn-primary pull-right" onclick="initMessageModal(\'' + item.name + '\'); showModal(\'message\')"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></button>'
             } else {
@@ -535,9 +556,16 @@ function toggleAttendingButton(clicked){
 function initProfileModal(){
     // open by calling showModal("profile") and setting selectedUserId to appropriate id; should be opened from eventModal
     var id = selectedUserId;
-    var userHtml = '<img src="' + user1.img + '" style = "max-height: 200px; max-width: 90%" alt=""/>';
+    for (var key in allUsers) {
+        if (id == key) {
+            var user = allUsers[key]
+            break;
+        }
+    }
+
+    var userHtml = '<img src="' + user.img + '" style = "max-height: 200px; max-width: 90%" alt=""/>';
     $("#userPic").html(userHtml);
-    var infoHtml = '<h1>' + user1.name + '</h1><b>Age: </b>' + user1.age + '</br><b>Hometown: </b>' + user1.hometown + '</br><b>About Me: </b>' + user1.aboutme;
+    var infoHtml = '<h1>' + user.name + '</h1><b>Age: </b>' + user.age + '</br><b>Hometown: </b>' + user.hometown + '</br><b>About Me: </b>' + user.aboutme;
     $("#userInfo").html(infoHtml);
     var attendingHtml = ''
     names = storedEvents.eventNames
@@ -546,17 +574,11 @@ function initProfileModal(){
     console.log(url)
 
     if (user1.message == 0) {
-        messageButton = '<td>&nbsp;&nbsp;&nbsp;<div class="btn-group"><button type="button" class="btn btn-xs btn-info">Message</button>'
-        messageButton += '<button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'
-        messageButton += '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>'
-        messageButton += '<ul class="dropdown-menu" role="menu"><li><a href="#">Message</a></li><li><a href="#">Do Not Message</a></li>'
-        messageButton += '</ul></div></td>'
+        messageButton = '<form class="form-inline" role="form"><div class="form-group"><select class="form-control input-sm"><option>Message</option>'
+        messageButton += '<option>Do not Message</option></select></div><button type="message" class="btn btn-xs btn-primary pull-right">Update</button></form>'
     } else {
-        messageButton = '<td>&nbsp;&nbsp;&nbsp;<div class="btn-group"><button type="button" class="btn btn-xs btn-info">Do Not Message</button>'
-        messageButton += '<button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'
-        messageButton += '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>'
-        messageButton += '<ul class="dropdown-menu" role="menu"><li><a href="#">Do Not Message</a></li><li><a href="#">Message</a></li>'
-        messageButton += '</ul></div></td>'
+        messageButton = '<form class="form-inline" role="form"><div class="form-group"><select class="form-control input-sm"><option>Do Not Message</option>'
+        messageButton += '<option>Message</option></select></div><button type="message" class="btn btn-xs btn-primary pull-right">Update</button></form>'
     }
     for (var i in names) {
         attendingHtml += '<tr><td>' + '<a href="' + url[i] + '">' + names[i]+ '</a></td><td>'
@@ -565,6 +587,8 @@ function initProfileModal(){
     }
     $("#eventTable").html(attendingHtml);
 }
+
+
 
 function initMessageModal(name){
     if (name != null)
