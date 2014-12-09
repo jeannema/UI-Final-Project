@@ -495,7 +495,7 @@ function initMessageModal(name){
 }
 
 function sendMessage(){
-    var title = $("#messageTitle").text().split(" ");
+    var title = $("#messageTitle").text().split("Send a message to ");
     var name = title[title.length-1];
     toastr.success("Message sent to " + name + "!");
     closeModal();
