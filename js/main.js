@@ -14,12 +14,11 @@ var selectedUserId;
 var username = "default";
 
 // list of users
-var currentUser = {name:"CurrentTest", message:0, age:20, hometown:'San Francisco, California', aboutme: 'I am an oversized inflatable robot created by Tadashi to help treat and diagnose people.', img: 'img/baymax.png'};
 var user1 = {name:"Baymax", message:0, age:20, hometown:'San Francisco, California', aboutme: 'I am an oversized inflatable robot created by Tadashi to help treat and diagnose people.', img: 'img/baymax.png'};
 var user2 = {name:"Juliet James", message:0, age:18, hometown: 'New York, NY', aboutme: 'College Freshman at Columbia. I love to explore the local art scenes!', img: 'img/honeylemon.png'};
 var user3 = {name:"Romeo Ryan", message:1, age:24, hometown: 'Dallas, TX', aboutme: ''};
 var allUsers = [user1, user2, user3];
-var usersAttending = [user1, user2, user3];
+var usersAttending = [user2, user3];
 
 $(document).ready(function(){
     /* **********Begin local storage implementation********** */
@@ -459,7 +458,7 @@ $(document).on("click", "#attendingButton", function attendEvent() {
             eventURLs: localEventURLs
         });
         
-        usersAttending.push(currentUser);
+        usersAttending.push(user1);
         $("#attendeesList").html(generateAttendeeList());
         $("#attendingButton").text("Mark as not attending");
         $("#attendingButton").removeClass( "btn-success" ).addClass( "btn-danger" );
@@ -467,7 +466,7 @@ $(document).on("click", "#attendingButton", function attendEvent() {
     }
     else if ($("#attendingButton").text() == "Mark as not attending"){
         // @lynn TODO: delete from local storage
-        var index = usersAttending.indexOf(currentUser.name);
+        var index = usersAttending.indexOf(user1.name);
         usersAttending.splice(index, 1);
         $("#attendeesList").html(generateAttendeeList());
         $("#attendingButton").text("Mark as attending");
