@@ -54,11 +54,14 @@
             <div id = "eventInfo" align = "left" style = "width: 70%; float:left"></div>
             <div id = "attendees" style = "width: 30%; float:right"></div>
             <h1 id="eventTitle"></h1><br>
-            <div class="btn-group" id="eventMessageStatus" style="display:none"><button type="button" class="btn btn-xs btn-info">Accepting Messages</button>
-            <button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-            <span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>
-            <ul class="dropdown-menu" role="menu"><li><a href="#">Accepting Messages</a></li><li><a href="#">Do Not Message</a></li>
-            </ul></div>
+            <div id="eventMessageStatus" style="display:none">
+                <form class="form-inline" role="form">
+                    <div class="form-group">
+                        <select class="form-control input-sm"><option>Message</option><option>Do not Message</option></select>
+                    </div>
+                    <button type="message" class="btn btn-xs btn-primary pull-right">Update</button>
+                </form>
+            </div>
             <br><br>
             <a href="#" id="attendingButton" class="btn btn-success">Mark as attending</a>
             <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
@@ -78,6 +81,7 @@
                     </table>
                 </div>
             </div>
+            <img src="img/back.png" id="backIcon" onclick="closeModal('profile')"/>
             <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
         </div>
         
