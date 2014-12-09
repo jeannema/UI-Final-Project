@@ -57,6 +57,8 @@ $(document).ready(function(){
     $("#profileLink").click(function(){
         selectedUserId = 1;
         showModal("profile");  
+        $("#backIcon").hide();
+
     });
     $("#messageLink").click(function(){
         showModal("message");  
@@ -104,6 +106,7 @@ function showModal(type) {
         $("#eventModal").fadeIn("slow");
     }
     else if (type == "profile"){
+        $("#backIcon").show();
         initProfileModal();
         $("#profileModal").fadeIn("slow");
     }
