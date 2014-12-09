@@ -10,6 +10,7 @@ var localEventURLs; // Local copy of stored event URLs
 var offset = 0;
 var listCounter = 1; // Used to number search results in infoWindow
 var selectedUserId;
+var eventsPerPage = 20; // Total number of results to display per page
 
 var username = "default";
 
@@ -241,12 +242,12 @@ function search(){
                     }
                 }
                 
-                // add previous and more links
+                // add previous and next links
                 $("#infoWindow").append("<br>");
                 var previousLink = "";
                 var nextLink = "";
                 if (offset != 0) {
-                    if (events.length < 20) // If we're on last page of search results, don't display Next
+                    if (events.length < eventsPerPage) // If we're on last page of search results, don't display Next
                         previousLink = "<p class='previousNextLink' onclick='showPrevious();'>Previous</p>";
                     else{
                         previousLink = "<p class='previousNextLink' onclick='showPrevious();' style='float:left; padding-left:40px;'>Previous</p>";
@@ -391,13 +392,15 @@ function addEvent(event, index){
 }
 
 function showNext(){
-    offset += 20;
+    offset += eventsPerPage;
     search();
 }
 
 function showPrevious(){
     if (offset == 0)    return;
-    offset -= 20;
+    offset -= eventsPerPage;
+    var firstNumber = $("#0").text().split(".")[0]; // Parses number of first displayed event
+    listCounter = firstNumber - eventsPerPage;
     search();
 }
 

@@ -3,6 +3,16 @@
     src: url(../fonts/Mastoc.ttf);
 }
 
+@font-face {
+    font-family: NYTSketch;
+    src: url(../fonts/SketchGothicSchool.ttf);
+}
+
+@font-face {
+    font-family: NYT;
+    src: url(../fonts/OldLondon.ttf);
+}
+
 html, body {
     height: 100%;
     margin: 0px;
@@ -184,4 +194,11 @@ html, body {
 }
 input[type='checkbox'] {
     zoom: 1.6;
+}
+
+#eventTitle {
+    position: relative;
+    top: 10px;
+    color: #4DA0EB;
+    font-size: 0.7em;
 }
