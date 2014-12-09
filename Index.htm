@@ -53,9 +53,15 @@
             <div id = "eventInfo" align = "left" style = "width: 70%; float:left"></div>
             <div id = "attendees" style = "width: 30%; float:right"></div>
             <h1 id="eventTitle"></h1><br>
+            <div class="btn-group" id="eventMessageStatus" style="display:none"><button type="button" class="btn btn-xs btn-info">Accepting Messages</button>
+            <button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>
+            <ul class="dropdown-menu" role="menu"><li><a href="#">Accepting Messages</a></li><li><a href="#">Do Not Message</a></li>
+            </ul></div>
+            <br><br>
             <a href="#" id="attendingButton" class="btn btn-success">Mark as attending</a>
             <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
-        </div>
+            </div>
         
         <div id="profileModal" class="modalPopup" style="display:none">
             <div id = "container1">

@@ -460,6 +460,7 @@ $(document).on("click", "#attendingButton", function attendEvent() {
         
         usersAttending.push(user1);
         $("#attendeesList").html(generateAttendeeList());
+        $("#eventMessageStatus").show();
         $("#attendingButton").text("Mark as not attending");
         $("#attendingButton").removeClass( "btn-success" ).addClass( "btn-danger" );
 
@@ -469,6 +470,7 @@ $(document).on("click", "#attendingButton", function attendEvent() {
         var index = usersAttending.indexOf(user1.name);
         usersAttending.splice(index, 1);
         $("#attendeesList").html(generateAttendeeList());
+        $("#eventMessageStatus").hide();
         $("#attendingButton").text("Mark as attending");
         $("#attendingButton").removeClass( "btn-danger" ).addClass( "btn-success" );
     }
