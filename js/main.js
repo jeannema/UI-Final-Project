@@ -51,6 +51,15 @@ $(document).ready(function(){
     $("#profileLink").click(function(){
         showModal("profile");  
     });
+    $("#messageLink").click(function(){
+        showModal("message");  
+    });
+    toastr.options = {
+        "showDuration": "2000",
+        "hideDuration": "2000",
+        "timeOut": "2000",
+        "extendedTimeOut": "2000"
+    }
     
     // initialize map
     var mapOptions = {
@@ -85,6 +94,10 @@ function showModal(type) {
         initProfileModal();
         $("#profileModal").fadeIn("slow");
     }
+    else if (type == "message"){
+        initMessageModal();
+        $("#messageModal").fadeIn("slow");
+    }
 }
 
 // hide modal
@@ -92,6 +105,7 @@ function closeModal(){
     $("#searchModal").fadeOut("fast");
     $("#eventModal").fadeOut("fast");
     $("#profileModal").fadeOut("fast");
+    $("#messageModal").fadeOut("fast");
     $("#modalWindow").fadeOut("fast");
 }
    
@@ -410,7 +424,7 @@ function initEventModal(){
         var mess = item.message;
         list += name;
         if (mess == 0) {
-            list += '\t' + '<button type="button" class="btn btn-xs btn-primary pull-right"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></button>'
+            list += '\t' + '<button type="button" class="btn btn-xs btn-primary pull-right" onclick="initMessageModal(\'' + item.name + '\'); showModal(\'message\')"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></button>'
         } else {
             list += '\t' + '<button type="button" class="btn btn-xs btn-primary pull-right" disabled="disabled"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></button>'
         }
@@ -473,4 +487,17 @@ function initProfileModal(){
         attendingHtml += '<td align = "pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Remove Event</td></tr>'
     }
     $("#eventTable").html(attendingHtml);
+}
+
+function initMessageModal(name){
+    if (name != null)
+        $("#messageTitle").text("Send a message to " + name);
+}
+
+function sendMessage(){
+    var title = $("#messageTitle").text().split(" ");
+    var name = title[title.length-1];
+    toastr.success("Message sent to " + name + "!");
+    closeModal();
+    showModal("event");
 }

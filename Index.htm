@@ -6,11 +6,13 @@
         <meta charset="utf-8">
         <link rel="stylesheet" type="text/css" href="css/main.css">
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/toastr.css">
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpvdvAxAYCePQxww6C6qeGbNIVc9OOX3Y"></script>
         <script type="text/javascript" src="js/main.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
         <script type="text/javascript" src="js/store.min.js"></script>
+        <script type="text/javascript" src="js/toastr.js"></script>
     </head>
     
     <body>
@@ -29,6 +31,7 @@
                 <div id="navbar" class="navbar-collapse collapse">
 
                   <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" id="messageLink">MessageTest</a></li>
                     <li><a href="#" id="searchLink">Search</a></li>
                     <li><a href="#" id="profileLink">Profile</a></li>
                   </ul>
@@ -72,7 +75,17 @@
             <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
         </div>
         
-        <div id="searchModal" class="modalPopup">
+        <div id="messageModal" class="modalPopup" style="display:block">
+            <h1 id="messageTitle"></h1><br>
+            <input type="text" placeholder="Subject" class="searchField"></input>
+            <br>
+            <textarea style="height:100px;" class="searchField" placeholder="Message"></textarea>
+            <br>
+            <a href="#" id="sendMessageButton" class="btn btn-success" onclick="sendMessage();">Send Message</a>
+            <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
+        </div>
+    
+        <div id="searchModal" class="modalPopup" style="display:none">
             <center>
                 <h1>Search</h1>
                     <input type="text" class="searchField" id="stringSearch" placeholder="search" onfocus="(this.placeholder='')" onblur="blurFunc(this);"><br>
