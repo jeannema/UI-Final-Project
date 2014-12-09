@@ -51,17 +51,24 @@
             <div id = "eventInfo" align = "left" style = "width: 70%; float:left"></div>
             <div id = "attendees" style = "width: 30%; float:right"></div>
             <h1 id="eventTitle"></h1><br>
-            <a href="#" id="attendingButton" class="btn btn-lg btn-success">Mark as attending</a>
+            <a href="#" id="attendingButton" class="btn btn-success">Mark as attending</a>
             <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
         </div>
         
         <div id="profileModal" class="modalPopup" style="display:none">
             <div id = "container1">
-                <div id = "userPic" align = "left" style = "width: 50%; float:left"></div>
-                <div id = "userInfo" style = "width: 50%; float:right" align= "left"></div>
+                <div id = "userPic" align = "left" style = "width: 50%; height:200px; float:left"></div>
+                <div id = "userInfo" style = "width: 50%; height:200px; float:right" align= "left"></div>
             </div>
         </br>
-            <div id = "container1">hello</div>
+            <div id = "eventsAttending">
+                <div class="panel panel-default">
+                    <div class="panel-heading">My Events</div>
+                    <table class="table table-bordered">
+                        <div id = "eventTable"></div>
+                    </table>
+                </div>
+            </div>
             <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
         </div>
         

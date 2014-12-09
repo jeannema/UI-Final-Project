@@ -366,24 +366,42 @@ function initEventModal(){
     $("#eventTitle").click(function(){
         window.open(events[selectedEventId].event_detail_url)
     });
-    $("#eventInfo").html(
-        '</br><b>Category: </b>' + events[selectedEventId].category +
-        '</br><b>Date/Time: </b>' + events[selectedEventId].date_time_description + 
-        '</br><b>Description:</b><br>' + 
-        events[selectedEventId].web_description + '</br>' +
-        '<b><u>Venue Information: </b></u>' + 
-        '</br><a href="' + events[selectedEventId].venue_website + '">' + events[selectedEventId].venue_name + '</a>' +
-        '</br><b>Address: </b></br>' + events[selectedEventId].street_address + 
-        '</br>' + events[selectedEventId].city + ', ' + events[selectedEventId].state + ' ' + events[selectedEventId].postal_code +
-        '</br><b>Borough: </b>' + events[selectedEventId].borough + ' | ' + '<b>Neigborhood: </b>' + events[selectedEventId].neighborhood +
-        '</br><b> Telephone: </b>' +  events[selectedEventId].telephone
+    var eventHtml = ''
+    if (events[selectedEventId].category !== undefined) {
+        eventHtml += '</br><b>Category: </b>' + events[selectedEventId].category
+    }
+    if (events[selectedEventId].date_time_description !== undefined) {
+        eventHtml += '</br><b>Date/Time: </b>' + events[selectedEventId].date_time_description
+    }
+    if (events[selectedEventId].web_description !== undefined){
+        eventHtml += '</br><b>Description:</b><br>' + events[selectedEventId].web_description
+    }
+    eventHtml += '</br><b><u>Venue Information: </b></u>'
 
-    );
+    if ((events[selectedEventId].venue_website !== undefined) && (events[selectedEventId].venue_name !== undefined)){
+        eventHtml += '</br><a href="' + events[selectedEventId].venue_website + '">' + events[selectedEventId].venue_name + '</a>'
+    } else if (events[selectedEventId].venue_name !== undefined) {
+        eventHtml += '</br>' + events[selectedEventId].venue_name
+    }
+    if (events[selectedEventId].street_address !== undefined) {
+        eventHtml += '</br><b>Address: </b></br>' + events[selectedEventId].street_address
+    }
+    if ((events[selectedEventId].city !== undefined) && (events[selectedEventId].state !== undefined) && (events[selectedEventId].postal_code !== undefined)) {
+        eventHtml += '</br>' + events[selectedEventId].city + ', ' + events[selectedEventId].state + ' ' + events[selectedEventId].postal_code
+    }
+    if ((events[selectedEventId].borough !== undefined) && (events[selectedEventId].neighborhood !== undefined)) {
+        eventHtml += '</br><b>Borough: </b>' + events[selectedEventId].borough + ' | ' + '<b>Neigborhood: </b>' + events[selectedEventId].neighborhood
+    }
+    if (events[selectedEventId].telephone !== undefined) {
+        eventHtml += '</br><b> Telephone: </b>' +  events[selectedEventId].telephone
+    }
 
-    var user1 = {name:"John Doe", message:0};
-    var user2 = {name:"Sally Sue", message:0};
-    var user3 = {name:"Mary Lee", message:1};
-    var usersAttending = [user1, user2, user3];
+    if ((events[selectedEventId].venue_website === undefined) && (events[selectedEventId].venue_name === undefined) && (events[selectedEventId].street_address === undefined) && (events[selectedEventId].borough === undefined) && (events[selectedEventId].telephone === undefined)) {
+        eventHtml += '</br> No Venue Information Available</br>'
+    }
+
+    console.log(eventHtml)
+    $("#eventInfo").html(eventHtml);
     htmlcode = '<h4><center><u>Attendees</u></center></h4><div class="panel-body"><ul class="list-group" style="list-style-type:none">';
     for (var list in usersAttending){
         var item = usersAttending[list]
@@ -426,9 +444,33 @@ $(document).on("click", "#attendingButton", function attendEvent() {
 function initProfileModal(){
     // open by calling showModal("profile") and setting selectedUserId to appropriate id; should be opened from eventModal
     var id = selectedUserId;
-    var userHtml = '<img src="' + user1.img + '" style = "max-height: 640px; max-width: 90%" alt=""/>';
+    var userHtml = '<img src="' + user1.img + '" style = "max-height: 200px; max-width: 90%" alt=""/>';
     $("#userPic").html(userHtml);
     var infoHtml = '<h1>' + user1.name + '</h1><b>Age: </b>' + user1.age + '</br><b>Hometown: </b>' + user1.hometown + '</br><b>About Me: </b>' + user1.aboutme;
     $("#userInfo").html(infoHtml);
-    
+    var attendingHtml = ''
+    names = storedEvents.eventNames
+    console.log(names)
+    url = storedEvents.eventURLs
+    console.log(url)
+
+    if (user1.message == 0) {
+        messageButton = '<td>&nbsp;&nbsp;&nbsp;<div class="btn-group"><button type="button" class="btn btn-xs btn-info">Message</button>'
+        messageButton += '<button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'
+        messageButton += '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>'
+        messageButton += '<ul class="dropdown-menu" role="menu"><li><a href="#">Message</a></li><li><a href="#">Do Not Message</a></li>'
+        messageButton += '</ul></div></td>'
+    } else {
+        messageButton = '<td>&nbsp;&nbsp;&nbsp;<div class="btn-group"><button type="button" class="btn btn-xs btn-info">Do Not Message</button>'
+        messageButton += '<button type="button" class="btn btn-xs btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'
+        messageButton += '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>'
+        messageButton += '<ul class="dropdown-menu" role="menu"><li><a href="#">Do Not Message</a></li><li><a href="#">Message</a></li>'
+        messageButton += '</ul></div></td>'
+    }
+    for (var i in names) {
+        attendingHtml += '<tr><td>' + '<a href="' + url[i] + '">' + names[i]+ '</a></td><td>'
+        attendingHtml += messageButton
+        attendingHtml += '<td align = "pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Remove Event</td></tr>'
+    }
+    $("#eventTable").html(attendingHtml);
 }
