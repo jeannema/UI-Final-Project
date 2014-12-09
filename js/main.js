@@ -343,7 +343,7 @@ function addEvent(event, index){
         position: new google.maps.LatLng(event.geocode_latitude, event.geocode_longitude),
         map: map,
         id: index,
-        icon: 'img/puppy.png'
+        icon: 'img/marker.png'
     }));
 
     // open event modal on marker click
