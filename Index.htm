@@ -31,7 +31,6 @@
                 <div id="navbar" class="navbar-collapse collapse">
 
                   <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#" id="messageLink">MessageTest</a></li>
                     <li><a href="#" id="searchLink">Search</a></li>
                     <li><a href="#" id="profileLink">Profile</a></li>
                   </ul>
@@ -75,7 +74,7 @@
             <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
         </div>
         
-        <div id="messageModal" class="modalPopup" style="display:block">
+        <div id="messageModal" class="modalPopup" style="display:none">
             <h1 id="messageTitle"></h1><br>
             <input type="text" placeholder="Subject" class="searchField"></input>
             <br>
@@ -85,7 +84,7 @@
             <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
         </div>
     
-        <div id="searchModal" class="modalPopup" style="display:none">
+        <div id="searchModal" class="modalPopup">
             <center>
                 <h1>Search</h1>
                     <input type="text" class="searchField" id="stringSearch" placeholder="search" onfocus="(this.placeholder='')" onblur="blurFunc(this);"><br>
