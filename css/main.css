@@ -72,6 +72,14 @@ html, body {
     overflow: scroll;   
 }
 
+/* @Mahd: change size/positioning of event and profile modals here*/
+#aboutModal{
+    width: 700px;
+    height: 400px;
+    top: 24%;
+    overflow: scroll;   
+}
+
 #container1{
     width:100%;
     height:200px;

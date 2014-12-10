@@ -50,6 +50,9 @@ $(document).ready(function(){
     $("#searchLink").click(function(){
         showModal("search");  
     });
+    $("#aboutLink").click(function(){
+        showModal("about");  
+    });
     $("#modalWindow").click(function(){
         closeModal();  
     });
@@ -58,8 +61,8 @@ $(document).ready(function(){
         selectedUserId = 1;
         showModal("profile");  
         $("#backIcon").hide();
-
     });
+    
     $("#messageLink").click(function(){
         showModal("message");  
     });
@@ -97,7 +100,8 @@ function showModal(type) {
     $("#eventModal").fadeOut("fast");
     $("#profileModal").fadeOut("fast");
     $("#messageModal").fadeOut("fast");
-    
+    $("#aboutModal").fadeOut("fast");
+
     $("#modalWindow").fadeIn("slow");
     if (type == "search")
         $("#searchModal").fadeIn("slow");
@@ -114,10 +118,15 @@ function showModal(type) {
         initMessageModal();
         $("#messageModal").fadeIn("slow");
     }
+    else if (type == "about"){
+        initAboutModal();
+        $("#aboutModal").fadeIn("slow");
+    }
 }
 
 // hide modal
 function closeModal(){
+    $("#aboutModal").fadeOut("fast");
     $("#searchModal").fadeOut("fast");
     $("#eventModal").fadeOut("fast");
     $("#profileModal").fadeOut("fast");
@@ -589,12 +598,14 @@ function initProfileModal(){
             attendingHtml += '<tr><td>' + '<a href="' + url[i] + '">' + names[i]+ '</a></td><td>'
             attendingHtml += messageButton
             inputEvent = "'" + names[i] + "'"
-            attendingHtml += '<td align = "pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="eventUser" href="#" onclick="removeEvent(' + inputEvent + ')">' + 'Remove Event' + '</a></td></tr>'
+            attendingHtml += '<td align = "pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="eventUser" href="#" style="color: #CC0000" onclick="removeEvent(' + inputEvent + ')">' + 'Remove Event' + '</a></td></tr>'
         }
     } else {
+        attendingHtml = '<ul class="list-group">'
         for (var i in names) {
-            attendingHtml += '<tr>' + '<a href="' + url[i] + '">' + names[i]+ '</a></tr>'
+            attendingHtml += '<li class="list-group-item">' + '<a href="' + url[i] + '">' + names[i]+ '</a></li>'
         }
+        attendingHtml += '</ul>'
     }
     $("#eventTable").html(attendingHtml);
 }
@@ -627,4 +638,9 @@ function sendMessage(){
     var name = title[title.length-1];
     toastr.success("Message sent to " + name + "!");
     showModal("event");
+}
+
+//@Mahd
+function initAboutModal(){
+    
 }
