@@ -57,6 +57,13 @@ html, body {
     overflow: scroll;      
 }
 
+#receivedMessageModal{
+    width: 50%;
+    height: 50%;
+    top: 24%;
+    overflow: scroll;      
+}
+
 /* @elisha: change size/positioning of event and profile modals here*/
 #eventModal{
     width: 50%;
@@ -66,6 +73,14 @@ html, body {
 }
 
 #profileModal{
+    width: 700px;
+    height: 400px;
+    top: 24%;
+    overflow: scroll;   
+}
+
+/* @Mahd: change size/positioning of event and profile modals here*/
+#aboutModal{
     width: 700px;
     height: 400px;
     top: 24%;
@@ -117,6 +132,20 @@ html, body {
     border: 0;
     outline: 0;
     background: transparent;
+    border-bottom: 3px solid black;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.responseField{
+    width: 400px;
+    height: 30px; 
+    margin-bottom: 10px;
+    font-size: 20px; 
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-top: 3px solid black;
     border-bottom: 3px solid black;
     padding: 5px;
     border-radius: 5px;
@@ -183,12 +212,22 @@ html, body {
     vertical-align: middle;
     line-height: 50px;
     font-size: 26px;
+    color: white;
 }
 
 #app-line {
     font-size: 16px;
+    vertical-align: -50%;
+    line-height: 10px;
 }
 
+#aboutTitle {
+    color: #4DA0EB;
+}
+
+#aboutText {
+    font-size: 17px;
+}
 .header-placeholder{
     height: 50px;
 }

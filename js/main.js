@@ -38,6 +38,10 @@ var allUsers = {1:user1, 2:user2, 3:user3, 4:user4, 5:user5, 6:user6};
 var usersAttending = [user2, user3, user4, user5, user6];
 var defaultusersAttending = [user2, user3, user4, user6]; // usersAttending gets set back to default for each new event modal
 
+// hard coded messages
+var messages = ["Hey! Did you want to meet up to go to the robotics show on Friday?", "That superhero expo looks really exciting!!!! I really need someone to go with!!!"];
+var messageFrom = [user3, user4];
+var responseId;
 $(document).ready(function(){
     /* **********Begin local storage implementation********** */
     
@@ -72,6 +76,9 @@ $(document).ready(function(){
     $("#searchLink").click(function(){
         showModal("search");  
     });
+    $("#aboutLink").click(function(){
+        showModal("about");  
+    });
     $("#modalWindow").click(function(){
         closeModal();  
     });
@@ -80,8 +87,8 @@ $(document).ready(function(){
         selectedUserId = 1;
         showModal("profile");  
         $("#backIcon").hide();
-
     });
+    
     $("#messageLink").click(function(){
         showModal("message");  
     });
@@ -137,7 +144,9 @@ function showModal(type) {
     $("#eventModal").fadeOut("fast");
     $("#profileModal").fadeOut("fast");
     $("#messageModal").fadeOut("fast");
-    
+    $("#receivedMessageModal").fadeOut("fast");
+    $("#aboutModal").fadeOut("fast");
+
     $("#modalWindow").fadeIn("slow");
     
     if (type == "search")
@@ -154,6 +163,14 @@ function showModal(type) {
     else if (type == "message"){
         initMessageModal();
         $("#messageModal").fadeIn("slow");
+    }
+    else if (type == "receivedMessage"){
+        hideResponseForm();
+        $("#receivedMessageModal").fadeIn("slow");
+    }
+    else if (type == "about"){
+        initAboutModal();
+        $("#aboutModal").fadeIn("slow");
     }
 }
 
@@ -175,10 +192,12 @@ function showEventsFromProfile(index) {
 
 // hide modal
 function closeModal(){
+    $("#aboutModal").fadeOut("fast");
     $("#searchModal").fadeOut("fast");
     $("#eventModal").fadeOut("fast");
     $("#profileModal").fadeOut("fast");
     $("#messageModal").fadeOut("fast");
+    $("#receivedMessageModal").fadeOut("fast");
     $("#modalWindow").fadeOut("fast");
 }
    
@@ -817,5 +836,43 @@ function sendMessage(){
     var title = $("#messageTitle").text().split("Send a message to ");
     var name = title[title.length-1];
     toastr.success("Message sent to " + name + "!");
-    showModal("event"); // returns view to previous event modal
+    showModal("event");
+}
+
+//@Mahd
+function initAboutModal(){
+    var aboutImg = '<img src="img/nyc.jpg" style = "max-height: 200px; max-width: 90%" alt=""/>';
+    $("#aboutPic").html(aboutImg);
+}
+
+function initReceivedMessageModal(index){
+    responseId = index - 1;
+    $("#receivedMessageTitle").text("Conversation with " + messageFrom[responseId].name);
+    $("#receivedMessageBody").html(messageFrom[responseId].name + ": " + messages[responseId]);
+}
+
+function replyToMessage(){
+    $("#replyButton").hide();
+    $("#responseDiv").show();
+    $("#hrTag").show();
+    $('#receivedMessageModal').animate({'height': '60%'}, { duration: 600, queue: false });
+    $('#receivedMessageModal').animate({'top': '20%'}, { duration: 600, queue: false });
+}
+
+
+function sendResponse(){
+    toastr.success("Sent reply to " + messageFrom[responseId].name + "!");
+    messages[responseId] = messages[responseId] + "<hr>You: " + $("#responseMssageBody").val();
+    $("#receivedMessageBody").html($("#receivedMessageBody").html() + "<hr>You: " + $("#responseMssageBody").val());
+    $("#responseMssageBody").val("");
+    $("#responseMessageSubject").val("");
+    hideResponseForm();
+}
+
+function hideResponseForm(){
+    $("#replyButton").show();
+    $("#responseDiv").hide();
+    $("#hrTag").hide();
+    $('#receivedMessageModal').animate({'height': '50%'}, { duration: 600, queue: false });
+    $('#receivedMessageModal').animate({'top': '24%'}, { duration: 600, queue: false });
 }
