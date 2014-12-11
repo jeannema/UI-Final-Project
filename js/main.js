@@ -29,6 +29,7 @@ var defaultusersAttending = [user2, user3, user4, user6]; // usersAttending gets
 // hard coded messages
 var messages = ["Hey! Did you want to meet up to go to the robotics show on Friday?", "That superhero expo looks really exciting!!!! I really need someone to go with!!!"];
 var messageFrom = [user3, user4];
+var responseId;
 $(document).ready(function(){
     /* **********Begin local storage implementation********** */
     
@@ -655,9 +656,9 @@ function initAboutModal(){
 }
 
 function initReceivedMessageModal(index){
-    index = index - 1;
-    $("#receivedMessageTitle").text("Conversation with " + messageFrom[index].name);
-    $("#receivedMessageBody").text(messageFrom[index].name + ": " + messages[index]);
+    responseId = index - 1;
+    $("#receivedMessageTitle").text("Conversation with " + messageFrom[responseId].name);
+    $("#receivedMessageBody").html(messageFrom[responseId].name + ": " + messages[responseId]);
 }
 
 function replyToMessage(){
@@ -670,9 +671,8 @@ function replyToMessage(){
 
 
 function sendResponse(){
-    var title = $("#receivedMessageTitle").text().split('Conversation with ');
-    var name = title[title.length - 1];
-    toastr.success("Sent reply to " + name + "!");
+    toastr.success("Sent reply to " + messageFrom[responseId].name + "!");
+    messages[responseId] = messages[responseId] + "<hr>You: " + $("#responseMssageBody").val();
     $("#receivedMessageBody").html($("#receivedMessageBody").html() + "<hr>You: " + $("#responseMssageBody").val());
     $("#responseMssageBody").val("");
     $("#responseMessageSubject").val("");
