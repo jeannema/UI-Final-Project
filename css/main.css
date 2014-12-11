@@ -57,6 +57,13 @@ html, body {
     overflow: scroll;      
 }
 
+#receivedMessageModal{
+    width: 50%;
+    height: 50%;
+    top: 24%;
+    overflow: scroll;      
+}
+
 /* @elisha: change size/positioning of event and profile modals here*/
 #eventModal{
     width: 50%;
@@ -125,6 +132,20 @@ html, body {
     border: 0;
     outline: 0;
     background: transparent;
+    border-bottom: 3px solid black;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.responseField{
+    width: 400px;
+    height: 30px; 
+    margin-bottom: 10px;
+    font-size: 20px; 
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-top: 3px solid black;
     border-bottom: 3px solid black;
     padding: 5px;
     border-radius: 5px;

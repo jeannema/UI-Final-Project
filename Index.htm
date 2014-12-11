@@ -35,6 +35,15 @@
                     <li><a href="#" id="searchLink" style="color:white">Search</a></li>
                     <li><a href="#" id="profileLink" style="color:white">Profile</a></li>
                     <li><a href="#" id="aboutLink" style="color:white">About</a></li>
+                    <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="color:white">Messages<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" onclick="initReceivedMessageModal(1); showModal('receivedMessage')">Hiro Hamada: Hey!...</a></li>
+                        <li><a href="#" onclick="initReceivedMessageModal(2); showModal('receivedMessage')">Fred: That superhe...</a></li>
+
+                    </ul>
+                </li>
+              </ul>
                   </ul>
                 </div>
               </div>
@@ -96,6 +105,19 @@
             <img src="img/close.png" id="closeIcon" onclick="showModal('event')"/>
         </div>
     
+        <div id="receivedMessageModal" class="modalPopup" style="display:none">
+            <h1 id="receivedMessageTitle"></h1><br>
+            <div id="receivedMessageBody"></div>
+            <hr id="hrTag" style="display:none"><br>
+            <a href="#" id="replyButton" class="btn btn-success" onclick="replyToMessage();">Reply</a>
+            <div id="responseDiv" style="display:none">
+                <textarea id="responseMssageBody" style="height:100px;" class="responseField" placeholder="Message"></textarea>
+                <br>
+                <a href="#" id="sendResponse" class="btn btn-success" onclick="sendResponse();">Send Message</a>
+            </div>
+            <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
+        </div>
+
         <!-- @Mahd -->
 
         <div id="aboutModal" class="modalPopup" style="display:none">
