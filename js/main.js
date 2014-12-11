@@ -652,7 +652,8 @@ function sendMessage(){
 
 //@Mahd
 function initAboutModal(){
-    
+    var aboutImg = '<img src="img/nyc.jpg" style = "max-height: 200px; max-width: 90%" alt=""/>';
+    $("#aboutPic").html(aboutImg);
 }
 
 function initReceivedMessageModal(index){

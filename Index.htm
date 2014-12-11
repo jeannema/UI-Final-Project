@@ -27,10 +27,11 @@
                     <span class="icon-bar"></span>
                   </button>
                 
-                  <p id="app-name" style="color:white"> <b>Seeker</b>  <span id="app-line" style="color:white"> - Find events that you love and meet new people </span> </p>
-                
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
+                  <a href="index.htm" id="app-name" style="text-decoration:none" onclick="closeModal()"> <b>Seeker</b> </a>
+                  <span id="app-line" style="color:white"> - Find events that you love and meet new people </span>
+                
                   <ul class="nav navbar-nav navbar-right">
                     <li><a href="#" id="searchLink" style="color:white">Search</a></li>
                     <li><a href="#" id="profileLink" style="color:white">Profile</a></li>
@@ -121,7 +122,17 @@
         <!-- @Mahd -->
 
         <div id="aboutModal" class="modalPopup" style="display:none">
-            About
+            <h1 id="aboutTitle">Welcome to Seeker! </h1>
+            <div id = "container1">
+                <div id = "aboutPic" align = "center" style = "width: 100%; height:200px; float:center"></div>
+            </div>
+            <br>
+            <p id="aboutText" align = "left">
+                Seeker is an application that allows New Yorkers to meet other New Yorkers at exciting New York events! <br><br>
+                New York is known to be a very happening city and we New Yorkers never like to sit at home doing nothing. We often ride out with our friends to the countless events happening everywhere. But we have all experienced those times when we want to go to a specific event but can’t find out somebody to go with. Your friends might be busy, or they just might not be interested in a new interest that you have picked up and want to explore. <br><br>
+                Don’t worry; we have got you covered! <br><br>
+                Simply search for events that you might be interested in and find out who else is planning a visit. Look at their profiles and send them a message. Don’t be shy – this is a great opportunity for you to connect with wonderful people who share your interests. </p>
+
             <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
         </div>
 

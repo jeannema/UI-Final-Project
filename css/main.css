@@ -212,12 +212,22 @@ html, body {
     vertical-align: middle;
     line-height: 50px;
     font-size: 26px;
+    color: white;
 }
 
 #app-line {
     font-size: 16px;
+    vertical-align: -50%;
+    line-height: 10px;
 }
 
+#aboutTitle {
+    color: #4DA0EB;
+}
+
+#aboutText {
+    font-size: 17px;
+}
 .header-placeholder{
     height: 50px;
 }
