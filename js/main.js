@@ -7,6 +7,18 @@ var selectedEventId;
 var storedEvents; // Used in store.js object for persistent event data storage across user sessions
 var localEventNames; // Local copy of stored event names
 var localEventURLs; // Local copy of stored event URLs
+var localEventCategory;
+var localEventDateTime;
+var localEventWebDescr;
+var localVenueSite;
+var localVenueName;
+var localAddress;
+var localCity;
+var localState;
+var localZipcode;
+var localBorough;
+var localNeighborhood;
+var localTel;
 var offset = 0;
 var listCounter = 1; // Used to number search results in infoWindow
 var selectedUserId;
@@ -35,14 +47,24 @@ $(document).ready(function(){
     if (store.get("userEvents") == null) {
         store.set("userEvents", {
             eventNames: [],
-            eventURLs: []
+            eventURLs: [],
+            eventCategory: [],
+            eventDateTime: [],
+            eventWebDescr: [],
+            venueSite: [],
+            venueName: [],
+            address: [],
+            city: [],
+            state: [],
+            zipcode: [],
+            borough: [],
+            neighborhood: [],
+            tel: []
         });
     }
     storedEvents = store.get("userEvents");
     
-    // Initialize local variables with existing stored values at beginning of each session
-    localEventNames = storedEvents.eventNames;
-    localEventURLs = storedEvents.eventURLs;
+    initLocalStorage(); // Initialize local variables with existing stored values at beginning of each session
     
     /* **********End of local storage implementation********** */
     
@@ -88,7 +110,25 @@ $(document).ready(function(){
         $("#arrow").css("stroke","#000000");
         $("#arrow").css("fill","#000000");
     });
-});
+}); // end of $(document).ready
+
+// Initialize local values to whatever the current correct values in storage are
+function initLocalStorage() {
+    localEventNames = storedEvents.eventNames;
+    localEventURLs = storedEvents.eventURLs;
+    localEventCategory = storedEvents.eventCategory;
+    localEventDateTime = storedEvents.eventDateTime;
+    localEventWebDescr = storedEvents.eventWebDescr;
+    localVenueSite = storedEvents.venueSite;
+    localVenueName = storedEvents.venueName;
+    localAddress = storedEvents.address;
+    localCity = storedEvents.city;
+    localState = storedEvents.state;
+    localZipcode = storedEvents.zipcode;
+    localBorough = storedEvents.borough;
+    localNeighborhood = storedEvents.neighborhood;
+    localTel = storedEvents.tel;
+}
 
 // show modal
 function showModal(type) {
@@ -99,13 +139,14 @@ function showModal(type) {
     $("#messageModal").fadeOut("fast");
     
     $("#modalWindow").fadeIn("slow");
+    
     if (type == "search")
         $("#searchModal").fadeIn("slow");
     else if (type == "event"){
         initEventModal();
+        $("#attendingButton").show();
         $("#eventModal").fadeIn("slow");
-    }
-    else if (type == "profile"){
+    } else if (type == "profile"){
         $("#backIcon").show();
         initProfileModal();
         $("#profileModal").fadeIn("slow");
@@ -115,6 +156,22 @@ function showModal(type) {
         $("#messageModal").fadeIn("slow");
     }
 }
+
+function showEventsFromProfile(index) {
+    // close all other modal windows
+    $("#searchModal").fadeOut("fast");
+    $("#eventModal").fadeOut("fast");
+    $("#profileModal").fadeOut("fast");
+    $("#messageModal").fadeOut("fast");
+    
+
+    
+    initAttendingEventModal(index, "name");
+    $("#attendingButton").hide();
+
+    $("#eventModal").fadeIn("slow");
+
+}   
 
 // hide modal
 function closeModal(){
@@ -412,49 +469,96 @@ function showPrevious(){
 // @elisha
 // ********************************************** event modal methods **********************************************
 
-function initEventModal(){
+function initEventModal() {     
     $("#eventTitle").html(events[selectedEventId].event_name);
     $("#eventTitle").attr("href", events[selectedEventId].event_detail_url);
 
     var eventHtml = ''
     if (events[selectedEventId].category !== undefined) {
-        eventHtml += '</br><b>Category: </b>' + events[selectedEventId].category
+        eventHtml += '</br><b>Category: </b>' + events[selectedEventId].category;
     }
     if (events[selectedEventId].date_time_description !== undefined) {
-        eventHtml += '</br><b>Date/Time: </b>' + events[selectedEventId].date_time_description
+        eventHtml += '</br><b>Date/Time: </b>' + events[selectedEventId].date_time_description;
     }
     if (events[selectedEventId].web_description !== undefined){
-        eventHtml += '</br><b>Description:</b><br>' + events[selectedEventId].web_description
+        eventHtml += '</br><b>Description:</b><br>' + events[selectedEventId].web_description;
     }
-    eventHtml += '</br><b><u>Venue Information: </b></u>'
+    eventHtml += '</br><b><u>Venue Information: </b></u>';
 
-    if ((events[selectedEventId].venue_website !== undefined) && (events[selectedEventId].venue_name !== undefined)){
-        eventHtml += '</br><a target="_blank" href="http://' + events[selectedEventId].venue_website + '">' + events[selectedEventId].venue_name + '</a>'
+    if ((events[selectedEventId].venue_website !== undefined) && (events[selectedEventId].venue_name !== undefined)) {
+        eventHtml += '</br><a target="_blank" href="http://' + events[selectedEventId].venue_website + '">' + events[selectedEventId].venue_name + '</a>';
     } else if (events[selectedEventId].venue_name !== undefined) {
-        eventHtml += '</br>' + events[selectedEventId].venue_name
+        eventHtml += '</br>' + events[selectedEventId].venue_name;
     }
     if (events[selectedEventId].street_address !== undefined) {
-        eventHtml += '</br><b>Address: </b></br>' + events[selectedEventId].street_address
+        eventHtml += '</br><b>Address: </b></br>' + events[selectedEventId].street_address;
     }
     if ((events[selectedEventId].city !== undefined) && (events[selectedEventId].state !== undefined) && (events[selectedEventId].postal_code !== undefined)) {
-        eventHtml += '</br>' + events[selectedEventId].city + ', ' + events[selectedEventId].state + ' ' + events[selectedEventId].postal_code
+        eventHtml += '</br>' + events[selectedEventId].city + ', ' + events[selectedEventId].state + ' ' + events[selectedEventId].postal_code;
     }
     if ((events[selectedEventId].borough !== undefined) && (events[selectedEventId].neighborhood !== undefined)) {
-        eventHtml += '</br><b>Borough: </b>' + events[selectedEventId].borough + ' | ' + '<b>Neigborhood: </b>' + events[selectedEventId].neighborhood
+        eventHtml += '</br><b>Borough: </b>' + events[selectedEventId].borough + ' | ' + '<b>Neigborhood: </b>' + events[selectedEventId].neighborhood;
     }
     if (events[selectedEventId].telephone !== undefined) {
-        eventHtml += '</br><b> Telephone: </b>' +  events[selectedEventId].telephone
+        eventHtml += '</br><b> Telephone: </b>' +  events[selectedEventId].telephone;
     }
 
     if ((events[selectedEventId].venue_website === undefined) && (events[selectedEventId].venue_name === undefined) && (events[selectedEventId].street_address === undefined) && (events[selectedEventId].borough === undefined) && (events[selectedEventId].telephone === undefined)) {
-        eventHtml += '</br> No Venue Information Available</br>'
-    }
-
-    console.log(eventHtml)
+        eventHtml += '</br> No Venue Information Available</br>';
+    } 
+    
     $("#eventInfo").html(eventHtml);
     htmlcode = '<h4><center><u>Attendees</u></center></h4><div class="panel-body"><ul id="attendeesList" class="list-group" style="list-style-type:none">';
     htmlcode += generateAttendeeList(true);
-    htmlcode += '</ul></div>'
+    htmlcode += '</ul></div>';
+    $("#attendees").html(htmlcode);
+
+    // close modal by calling closeModal();
+}
+
+// Function for loading events from profile page (only events marked as attending and in local storage)
+function initAttendingEventModal(index, passedName) {
+    $("#eventTitle").html(storedEvents.eventNames[index]);
+    $("#eventTitle").attr("href", storedEvents.eventURLs[index]);
+
+    var eventHtml = '';
+    if (storedEvents.eventCategory[index] !== undefined) {
+        eventHtml += '</br><b>Category: </b>' + storedEvents.eventCategory[index];
+    }
+    if (storedEvents.eventDateTime[index] !== undefined) {
+        eventHtml += '</br><b>Date/Time: </b>' + storedEvents.eventDateTime[index];
+    }
+    if (storedEvents.eventWebDescr[index] !== undefined) {
+        eventHtml += '</br><b>Description:</b><br>' + storedEvents.eventWebDescr[index];
+    }
+    eventHtml += '</br><b><u>Venue Information: </b></u>';
+
+    if ((storedEvents.venueSite[index] !== undefined) && (storedEvents.venueName[index] !== undefined)) {
+        eventHtml += '</br><a target="_blank" href="http://' + storedEvents.venueSite[index] + '">' + storedEvents.venueName[index] + '</a>';
+    } else if (storedEvents.venueName[index] !== undefined) {
+        eventHtml += '</br>' + storedEvents.venueName[index];
+    }
+    if (storedEvents.address[index] !== undefined) {
+        eventHtml += '</br><b>Address: </b></br>' + storedEvents.address[index];
+    }
+    if ((storedEvents.city[index] !== undefined) && (storedEvents.state[index] !== undefined) && (storedEvents.zipcode[index] !== undefined)) {
+        eventHtml += '</br>' + storedEvents.city[index] + ', ' + storedEvents.state[index] + ' ' + storedEvents.zipcode[index];
+    }
+    if ((storedEvents.borough[index] !== undefined) && (storedEvents.neighborhood[index] !== undefined)) {
+        eventHtml += '</br><b>Borough: </b>' + storedEvents.borough[index] + ' | ' + '<b>Neigborhood: </b>' + storedEvents.neighborhood[index];
+    }
+    if (storedEvents.tel[index] !== undefined) {
+        eventHtml += '</br><b> Telephone: </b>' +  storedEvents.tel[index];
+    }
+
+    if ((storedEvents.venueSite[index] === undefined) && (storedEvents.venueName[index] === undefined) && (storedEvents.address[index] === undefined) && (storedEvents.borough[index] === undefined) && (storedEvents.tel[index] === undefined)) {
+        eventHtml += '</br> No Venue Information Available</br>';
+    }
+    
+    $("#eventInfo").html(eventHtml);
+    htmlcode = '<h4><center><u>Attendees</u></center></h4><div class="panel-body"><ul id="attendeesList" class="list-group" style="list-style-type:none">';
+    htmlcode += generateAttendeeList(true, passedName);
+    htmlcode += '</ul></div>';
     $("#attendees").html(htmlcode);
 
     // close modal by calling closeModal();
@@ -462,18 +566,17 @@ function initEventModal(){
 
 function updateSelectedUser(name) {
     for (var key in allUsers) {
-        user = allUsers[key]
+        user = allUsers[key];
         if (user.name == name) {
-            selectedUserId = key
+            selectedUserId = key;
             break;
         }
     }
     showModal("profile");
-    console.log(selectedUserId)
 }
 
 
-function generateAttendeeList(init){
+function generateAttendeeList(init, passedName){
     if (init){
         usersAttending = defaultusersAttending.slice(0);
         // make sure button is green
@@ -481,7 +584,13 @@ function generateAttendeeList(init){
         $("#attendingButton").text("Mark as attending");
         $("#attendingButton").removeClass( "btn-danger" ).addClass( "btn-success" );
     }
-    var clickedEventName = events[selectedEventId].event_name;
+    
+    var clickedEventName = "";
+    if (passedName != null)
+        clickedEventName = passedName;
+    else
+        clickedEventName = events[selectedEventId].event_name;
+    
     var storedEvents = store.get("userEvents").eventNames;
     if(init && storedEvents.indexOf(clickedEventName) >= 0 && usersAttending.indexOf(user1) == -1)
         toggleAttendingButton();
@@ -503,7 +612,7 @@ function generateAttendeeList(init){
     }
     return htmlcode;
 }
-// @elisha - this just stores event names and URLS for now, feel free to add anything you think we want to display on front-end!
+
 $(document).on("click", "#attendingButton", function attendEvent() {
     toggleAttendingButton(true);
 });
@@ -515,6 +624,18 @@ function toggleAttendingButton(clicked){
             // Add event to local copies
             localEventNames.push(events[selectedEventId].event_name);
             localEventURLs.push(events[selectedEventId].event_detail_url);
+            localEventCategory.push(events[selectedEventId].category);
+            localEventDateTime.push(events[selectedEventId].date_time_description);
+            localEventWebDescr.push(events[selectedEventId].web_description);
+            localVenueSite.push(events[selectedEventId].venue_website);
+            localVenueName.push(events[selectedEventId].venue_name);
+            localAddress.push(events[selectedEventId].street_address);
+            localCity.push(events[selectedEventId].city);
+            localState.push(events[selectedEventId].state);
+            localZipcode.push(events[selectedEventId].postal_code);
+            localBorough.push(events[selectedEventId].borough);
+            localNeighborhood.push(events[selectedEventId].neighborhood);
+            localTel.push(events[selectedEventId].telephone);
 
             console.log("added new values: " + localEventNames); // debugging
             console.log("added new values: " + localEventURLs); // debugging
@@ -522,7 +643,19 @@ function toggleAttendingButton(clicked){
             // Replaces stored object with local values
             store.set("userEvents", {
                 eventNames: localEventNames,
-                eventURLs: localEventURLs
+                eventURLs: localEventURLs,
+                eventCategory: localEventCategory,
+                eventDateTime: localEventDateTime,
+                eventWebDescr: localEventWebDescr,
+                venueSite: localVenueSite,
+                venueName: localVenueName,
+                address: localAddress,
+                city: localCity,
+                state: localState,
+                zipcode: localZipcode,
+                borough: localBorough,
+                neighborhood: localNeighborhood,
+                tel: localTel
             });
         }
         usersAttending.push(user1);
@@ -534,16 +667,39 @@ function toggleAttendingButton(clicked){
     }
     else if ($("#attendingButton").text() == "Mark as not attending"){
 
-        // remove event fromt local copies
+        // Remove event from local copies
         var index = localEventNames.indexOf(events[selectedEventId].event_name);
         localEventNames.splice(index, 1);
-        index = localEventURLs.indexOf(events[selectedEventId].event_detail_url);
         localEventURLs.splice(index, 1);
+        localEventCategory.splice(index, 1);
+        localEventDateTime.splice(index, 1);
+        localEventWebDescr.splice(index, 1);
+        localVenueSite.splice(index, 1);
+        localVenueName.splice(index, 1);
+        localAddress.splice(index, 1);
+        localCity.splice(index, 1);
+        localState.splice(index, 1);
+        localZipcode.splice(index, 1);
+        localBorough.splice(index, 1);
+        localNeighborhood.splice(index, 1);
+        localTel.splice(index, 1);
         
         // Replaces stored object with local values
         store.set("userEvents", {
             eventNames: localEventNames,
-            eventURLs: localEventURLs
+            eventURLs: localEventURLs,
+            eventCategory: localEventCategory,
+            eventDateTime: localEventDateTime,
+            eventWebDescr: localEventWebDescr,
+            venueSite: localVenueSite,
+            venueName: localVenueName,
+            address: localAddress,
+            city: localCity,
+            state: localState,
+            zipcode: localZipcode,
+            borough: localBorough,
+            neighborhood: localNeighborhood,
+            tel: localTel
         });
         
         var index = usersAttending.indexOf(user1.name);
@@ -555,13 +711,18 @@ function toggleAttendingButton(clicked){
     }
 }
 // ********************************************** profile modal methods **********************************************
+var i; // Global var for use in showEventsFromProfile(i)
+
+$(document).on("click", ".attendedEventURL", function () {
+    showEventsFromProfile(parseInt($(this).attr("stuff")));
+});
 
 function initProfileModal(){
     // open by calling showModal("profile") and setting selectedUserId to appropriate id; should be opened from eventModal
     var id = selectedUserId;
     for (var key in allUsers) {
         if (id == key) {
-            var user = allUsers[key]
+            var user = allUsers[key];
             break;
         }
     }
@@ -570,52 +731,80 @@ function initProfileModal(){
     $("#userPic").html(userHtml);
     var infoHtml = '<h1>' + user.name + '</h1><b>Age: </b>' + user.age + '</br><b>Hometown: </b>' + user.hometown + '</br><b>About Me: </b>' + user.aboutme;
     $("#userInfo").html(infoHtml);
-    var attendingHtml = ''
-    names = storedEvents.eventNames
-    console.log(names)
-    url = storedEvents.eventURLs
-    console.log(url)
+    var attendingHtml = '';
+    names = storedEvents.eventNames;
+    url = storedEvents.eventURLs;
 
     if (selectedUserId == 1) {
 
         if (user.message == 0) {
-            messageButton = '<form class="form-inline" role="form"><div class="form-group"><select class="form-control input-sm"><option>Message</option>'
-            messageButton += '<option>Do not Message</option></select></div><button type="message" class="btn btn-xs btn-primary pull-right">Update</button></form>'
+            messageButton = '<form class="form-inline" role="form"><div class="form-group"><select class="form-control input-sm"><option>Message</option>';
+            messageButton += '<option>Do not Message</option></select></div><button type="message" class="btn btn-xs btn-primary pull-right">Update</button></form>';
         } else {
-            messageButton = '<form class="form-inline" role="form"><div class="form-group"><select class="form-control input-sm"><option>Do Not Message</option>'
-            messageButton += '<option>Message</option></select></div><button type="message" class="btn btn-xs btn-primary pull-right">Update</button></form>'
+            messageButton = '<form class="form-inline" role="form"><div class="form-group"><select class="form-control input-sm"><option>Do Not Message</option>';
+            messageButton += '<option>Message</option></select></div><button type="message" class="btn btn-xs btn-primary pull-right">Update</button></form>';
         }
-        for (var i in names) {
-            attendingHtml += '<tr><td>' + '<a href="' + url[i] + '">' + names[i]+ '</a></td><td>'
-            attendingHtml += messageButton
-            inputEvent = "'" + names[i] + "'"
-            attendingHtml += '<td align = "pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="eventUser" href="#" style="color: #CC0000" onclick="removeEvent(' + inputEvent + ')">' + 'Remove Event' + '</a></td></tr>'
+        
+        // Display each row of events being attended
+        i = 0;
+        for (i in names) {
+            attendingHtml += '<tr><td>' + '<a href="#" class="attendedEventURL" stuff="' + i + '">' + names[i]+ '</a></td><td>';
+            attendingHtml += messageButton;
+            inputEvent = "'" + names[i] + "'";
+            attendingHtml += '<td align = "pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="eventUser" href="#" style="color: #CC0000" onclick="removeEvent(' + inputEvent + ')">' + 'Remove Event' + '</a></td></tr>';
         }
     } else {
-        attendingHtml = '<ul class="list-group">'
+        attendingHtml = '<ul class="list-group">';
         for (var i in names) {
-            attendingHtml += '<li class="list-group-item">' + '<a href="' + url[i] + '">' + names[i]+ '</a></li>'
+            attendingHtml += '<li class="list-group-item">' + '<a href="' + url[i] + '">' + names[i]+ '</a></li>';
         }
-        attendingHtml += '</ul>'
+        attendingHtml += '</ul>';
     }
     $("#eventTable").html(attendingHtml);
-}
-
+}    
+    
 function removeEvent(eventName) {
     storedEvents = store.get("userEvents");
-    localEventNames = storedEvents.eventNames;
-    localEventURLs = storedEvents.eventURLs;
+    initLocalStorage();
+    
+    var index = localEventNames.indexOf(eventName);
+    localEventNames.splice(index, 1);
+    localEventURLs.splice(index, 1);
+    localEventCategory.splice(index, 1);
+    localEventDateTime.splice(index, 1);
+    localEventWebDescr.splice(index, 1);
+    localVenueSite.splice(index, 1);
+    localVenueName.splice(index, 1);
+    localAddress.splice(index, 1);
+    localCity.splice(index, 1);
+    localState.splice(index, 1);
+    localZipcode.splice(index, 1);
+    localBorough.splice(index, 1);
+    localNeighborhood.splice(index, 1);
+    localTel.splice(index, 1);
 
-    var index = localEventNames.indexOf(eventName)
-    localEventNames.splice(index, 1)
-    localEventURLs.splice(index, 1)
+    // storedEvents.eventNames = localEventNames; // Commented out bc not sure if this was intentional by @elisha 
+    // storedEvents.eventURLs = localEventNames;
+    
+    store.set("userEvents", {
+        eventNames: localEventNames,
+        eventURLs: localEventURLs,
+        eventCategory: localEventCategory,
+        eventDateTime: localEventDateTime,
+        eventWebDescr: localEventWebDescr,
+        venueSite: localVenueSite,
+        venueName: localVenueName,
+        address: localAddress,
+        city: localCity,
+        state: localState,
+        zipcode: localZipcode,
+        borough: localBorough,
+        neighborhood: localNeighborhood,
+        tel: localTel
+    });
 
-    storedEvents.eventNames = localEventNames
-    storedEvents.eventURLs = localEventNames
-
-    initProfileModal()
+    initProfileModal();
 }
-
 
 function initMessageModal(name){
     if (name != null)
@@ -628,5 +817,5 @@ function sendMessage(){
     var title = $("#messageTitle").text().split("Send a message to ");
     var name = title[title.length-1];
     toastr.success("Message sent to " + name + "!");
-    showModal("event");
+    showModal("event"); // returns view to previous event modal
 }
