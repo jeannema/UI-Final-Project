@@ -140,7 +140,7 @@ function initLocalStorage() {
 }
 
 // show modal
-function showModal(type) {
+function showModal(type, noInit) {
     // close all other modal windows
     $("#searchModal").fadeOut("fast");
     $("#eventModal").fadeOut("fast");
@@ -148,14 +148,15 @@ function showModal(type) {
     $("#messageModal").fadeOut("fast");
     $("#receivedMessageModal").fadeOut("fast");
     $("#aboutModal").fadeOut("fast");
-
     $("#modalWindow").fadeIn("slow");
     
     if (type == "search")
         $("#searchModal").fadeIn("slow");
     else if (type == "event"){
-        initEventModal();
-        $("#attendingButton").show();
+        if (noInit == null){
+            initEventModal();
+            $("#attendingButton").show();
+        }
         $("#eventModal").fadeIn("slow");
     } else if (type == "profile"){
         $("#backIcon").show();
@@ -269,7 +270,7 @@ function newSearch(){
 
 // search functionality
 function search(){
-    $("#infoWindow").html("");
+    $("#infoWindow").html("<br>please wait, your results are loading...");
 
     // remove and clear old markers
     for (var i = 0; i < markers.length; i++) {
@@ -287,8 +288,8 @@ function search(){
         dataType: "jsonp",
         success: function(data)
         {  
+            $("#infoWindow").html("");
             events = data.results;
-            console.log(events)
 
             // check to see if there are results
             if (events.length > 0){
@@ -336,7 +337,8 @@ function search(){
                     }
                 }
                 else
-                    nextLink = "<p class='previousNextLink' onclick='showNext();'>Next</p>";
+                    if (events.length == 20)
+                        nextLink = "<p class='previousNextLink' onclick='showNext();'>Next</p>";
                 $("#infoWindow").append(previousLink);
                 $("#infoWindow").append(nextLink);
 
@@ -578,7 +580,7 @@ function initAttendingEventModal(index, passedName) {
     
     $("#eventInfo").html(eventHtml);
     htmlcode = '<h4><center><u>Attendees</u></center></h4><div class="panel-body"><ul id="attendeesList" class="list-group" style="list-style-type:none">';
-    htmlcode += generateAttendeeList(true, passedName);
+    htmlcode += generateAttendeeList(true, storedEvents.eventNames[index]);
     htmlcode += '</ul></div>';
     $("#attendees").html(htmlcode);
 
@@ -597,7 +599,7 @@ function updateSelectedUser(name) {
 }
 
 
-function generateAttendeeList(init, passedName){
+function generateAttendeeList(init, eventName){
     if (init){
         usersAttending = defaultusersAttending.slice(0);
         // make sure button is green
@@ -605,11 +607,9 @@ function generateAttendeeList(init, passedName){
         $("#attendingButton").text("Mark as attending");
         $("#attendingButton").removeClass( "btn-danger" ).addClass( "btn-success" );
     }
-    
+    if (eventName != null) usersAttending.push(user1);
     var clickedEventName = "";
-    if (passedName != null)
-        clickedEventName = passedName;
-    else
+    if (eventName == null)
         clickedEventName = events[selectedEventId].event_name;
     
     var storedEvents = store.get("userEvents").eventNames;
@@ -622,7 +622,11 @@ function generateAttendeeList(init, passedName){
             var name = item.name;
             var inputName = "'" + name + "'"
             if (item.name == "Baymax") {
-                var index = localEventNames.indexOf(events[selectedEventId].event_name);
+                var index;
+                if (eventName == null)
+                    index = localEventNames.indexOf(events[selectedEventId].event_name);
+                else
+                    index = localEventNames.indexOf(eventName);
                 var mess = localMess[index]
             } else {
                 var mess = item.message;
@@ -833,7 +837,7 @@ function initProfileModal(){
         // Display each row of events being attended
         i = 0;
         for (i in names) {
-            attendingHtml += '<tr><td>' + '<a href="#" class="attendedEventURL" stuff="' + i + '">' + names[i]+ '</a></td><td>';
+            attendingHtml += '<tr><td style="width: 55%">' + '<a href="#" class="attendedEventURL" stuff="' + i + '">' + names[i]+ '</a></td><td style="width: 25%">';
             var messageButton = ''
             inputEvent = "'" + names[i] + "'";
             if (mess_array[i]== 0) {
@@ -846,7 +850,7 @@ function initProfileModal(){
                 messageButton += ' class="btn btn-xs btn-primary pull-right">Update</button></div>';
             }
             attendingHtml += messageButton;
-            attendingHtml += '<td align = "pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="eventUser" href="#" style="color: #CC0000" onclick="removeEvent(' + inputEvent + ')">' + 'Remove Event' + '</a></td></tr><br><br>';
+            attendingHtml += '<td style="width: 25%" align = "pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="eventUser" href="#" style="color: #CC0000" onclick="removeEvent(' + inputEvent + ')">' + 'Remove Event' + '</a></td></tr><br><br>';
         }
 
     } else {

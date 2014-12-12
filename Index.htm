@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Simple Map</title>
+        <title>Seeker</title>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
         <meta charset="utf-8">
         <link rel="stylesheet" type="text/css" href="css/main.css">
@@ -34,9 +34,9 @@
                   <span id="app-line" style="color:white"> - Find events that you love and meet new people </span>
                 
                   <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" id="aboutLink" style="color:white">About</a></li>
                     <li><a href="#" id="searchLink" style="color:white">Search</a></li>
                     <li><a href="#" id="profileLink" style="color:white">Profile</a></li>
-                    <li><a href="#" id="aboutLink" style="color:white">About</a></li>
                     <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="color:white">Messages<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
@@ -94,7 +94,7 @@
                     </table>
                 </div>
             </div>
-            <img id="backIcon" src="img/back.png" id="backIcon" onclick="showModal('event')"/>
+            <img id="backIcon" src="img/back.png" id="backIcon" onclick="showModal('event', false)"/>
             <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
         </div>
         
@@ -105,6 +105,7 @@
             <textarea id="messageBody" style="height:100px;" class="searchField" placeholder="Message"></textarea>
             <br>
             <a href="#" id="sendMessageButton" class="btn btn-success" onclick="sendMessage();">Send Message</a>
+            <img id="backIcon" src="img/back.png" id="backIcon" onclick="showModal('event', false)"/>
             <img src="img/close.png" id="closeIcon" onclick="showModal('event')"/>
         </div>
     
