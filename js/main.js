@@ -722,7 +722,7 @@ function toggleAttendingButton(clicked){
         localBorough.splice(index, 1);
         localNeighborhood.splice(index, 1);
         localTel.splice(index, 1);
-        localMess.splice(Index, 1);
+        localMess.splice(index, 1);
 
         
         // Replaces stored object with local values
