@@ -109,6 +109,10 @@ html, body {
     left:10px;
 }
 
+#backIcon:hover, #backToProfileIcon:hover {
+    cursor:pointer;
+}
+
 #searchIcon{
     height: 50px;
     width: 50px;
