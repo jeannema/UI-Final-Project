@@ -74,8 +74,8 @@ html, body {
 
 #profileModal{
     width: 700px;
-    height: 400px;
-    top: 24%;
+    height: 85%;
+    top: 12%;
     overflow: scroll;   
 }
 
@@ -101,7 +101,7 @@ html, body {
     right: 10px;
 }
 
-#backIcon {
+#backIcon, #backToProfileIcon {
     height:40px;
     width:40px;
     position: absolute;

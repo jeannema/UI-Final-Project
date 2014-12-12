@@ -68,15 +68,16 @@
             <h1 id="eventTitle"></h1><br>
             <div id="eventMessageStatus" style="display:none">
                     <div class="form-group" style = "width: 30%; float:right; display: inline;">
-                        <select class="form-control input-sm" id="messButt">
+                        <select class="form-control input-sm" id="messButt" style="float:left; width:120px">
                             <option value="0">Message</option>
                             <option value="1">Do not Message</option>
                         </select>
-                        <button type="message" onclick="updateMessage()" class="btn btn-xs btn-primary pull-right">Update</button>
+                        <button type="message" onclick="updateMessage()" class="btn btn-xs btn-primary pull-right" style="margin-top:4px">Update</button>
                     </div>
             </div>
             <br><br>
             <a href="#" id="attendingButton" class="btn btn-success">Mark as attending</a>
+            <img src="img/back.png" id="backToProfileIcon" onclick="showModal('profile', true)"/>
             <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
             </div>
         
@@ -94,7 +95,7 @@
                     </table>
                 </div>
             </div>
-            <img id="backIcon" src="img/back.png" id="backIcon" onclick="showModal('event', false)"/>
+            <img id="backIcon" src="img/back.png" id="backIcon" onclick="showModal('event', true)"/>
             <img src="img/close.png" id="closeIcon" onclick="closeModal()"/>
         </div>
         
@@ -105,7 +106,7 @@
             <textarea id="messageBody" style="height:100px;" class="searchField" placeholder="Message"></textarea>
             <br>
             <a href="#" id="sendMessageButton" class="btn btn-success" onclick="sendMessage();">Send Message</a>
-            <img id="backIcon" src="img/back.png" id="backIcon" onclick="showModal('event', false)"/>
+            <img id="backIcon" src="img/back.png" id="backIcon" onclick="showModal('event', true)"/>
             <img src="img/close.png" id="closeIcon" onclick="showModal('event')"/>
         </div>
     

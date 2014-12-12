@@ -43,6 +43,7 @@ var defaultusersAttending = [user2, user3, user4, user6]; // usersAttending gets
 var messages = ["Hey! Did you want to meet up to go to the robotics show on Friday?", "That superhero expo looks really exciting!!!! I really need someone to go with!!!"];
 var messageFrom = [user3, user4];
 var responseId;
+
 $(document).ready(function(){
     /* **********Begin local storage implementation********** */
     
@@ -156,11 +157,15 @@ function showModal(type, noInit) {
         if (noInit == null){
             initEventModal();
             $("#attendingButton").show();
+            $("#backToProfileIcon").hide();
         }
+
         $("#eventModal").fadeIn("slow");
     } else if (type == "profile"){
-        $("#backIcon").show();
-        initProfileModal();
+        if (noInit == null){
+            $("#backIcon").show();
+            initProfileModal();
+        }
         $("#profileModal").fadeIn("slow");
     }
     else if (type == "message"){
@@ -183,12 +188,10 @@ function showEventsFromProfile(index) {
     $("#eventModal").fadeOut("fast");
     $("#profileModal").fadeOut("fast");
     $("#messageModal").fadeOut("fast");
-    
 
-    
     initAttendingEventModal(index, "name");
     $("#attendingButton").hide();
-
+    $("#backToProfileIcon").show();
     $("#eventModal").fadeIn("slow");
 
 }   
@@ -270,7 +273,7 @@ function newSearch(){
 
 // search functionality
 function search(){
-    $("#infoWindow").html("<br>please wait, your results are loading...");
+    $("#infoWindow").html("<center><img style='width:50%' src='img/loader.gif'/></center>");
 
     // remove and clear old markers
     for (var i = 0; i < markers.length; i++) {
@@ -758,9 +761,8 @@ $(document).on("click", ".attendedEventURL", function () {
 
 function updateMessage() {
     var select = document.getElementById("messButt")
-    var val = select.options[select.selectedIndex].value
+    var val = select.options[select.selectedIndex].value;
     var index = localEventNames.indexOf(events[selectedEventId].event_name);
-
     if (val == "1") {
         if (index !== -1) {
             localMess[index] = 1
@@ -783,6 +785,29 @@ function updateMessage() {
             });
         }
     }
+    else if (val == "0") {
+        if (index !== -1) {
+            localMess[index] = 0
+            store.set("userEvents", {
+                eventNames: localEventNames,
+                eventURLs: localEventURLs,
+                eventCategory: localEventCategory,
+                eventDateTime: localEventDateTime,
+                eventWebDescr: localEventWebDescr,
+                venueSite: localVenueSite,
+                venueName: localVenueName,
+                address: localAddress,
+                city: localCity,
+                state: localState,
+                zipcode: localZipcode,
+                borough: localBorough,
+                neighborhood: localNeighborhood,
+                tel: localTel,
+                mess: localMess
+            });
+        }
+    }
+    toastr.success("Messaging preferences updated!");
     initEventModal();
 }
 
@@ -810,6 +835,7 @@ function updateMess2(eventName, val) {
         tel: localTel,
         mess: localMess
     });
+    toastr.success("Messaging preferences updated!");
     initProfileModal()
 
 }
@@ -904,7 +930,7 @@ function removeEvent(eventName) {
         tel: localTel,
         mess: localMess
     });
-
+    toastr.success("You are no longer attending " + eventName);
     initProfileModal();
 }
 
