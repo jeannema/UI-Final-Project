@@ -48,6 +48,7 @@ $(document).ready(function(){
     /* **********Begin local storage implementation********** */
     
     //IF YOU WANT TO CLEAR ALL LOCAL STORAGE VALUES FOR DEBUGGING: store.clear();
+    
     // If there is no stored data, create storedEvents object
     if (store.get("userEvents") == null) {
         store.set("userEvents", {
@@ -84,7 +85,7 @@ $(document).ready(function(){
     $("#modalWindow").click(function(){
         closeModal();  
     });
-    // FOR DEBUGGING; take out later
+
     $("#profileLink").click(function(){
         selectedUserId = 1;
         showModal("profile");  
@@ -193,7 +194,6 @@ function showEventsFromProfile(index) {
     $("#attendingButton").hide();
     $("#backToProfileIcon").show();
     $("#eventModal").fadeIn("slow");
-
 }   
 
 // hide modal
@@ -344,7 +344,6 @@ function search(){
                         nextLink = "<p class='previousNextLink' onclick='showNext();'>Next</p>";
                 $("#infoWindow").append(previousLink);
                 $("#infoWindow").append(nextLink);
-
 
                 // calculate final map center and move
                 centerLat /= count;
@@ -606,7 +605,6 @@ function updateSelectedUser(name) {
     showModal("profile");
 }
 
-
 function generateAttendeeList(init, eventName){
     if (init){
         usersAttending = defaultusersAttending.slice(0);
@@ -635,12 +633,11 @@ function generateAttendeeList(init, eventName){
                     index = localEventNames.indexOf(events[selectedEventId].event_name);
                 else
                     index = localEventNames.indexOf(eventName);
-                var mess = localMess[index]
+                var mess = localMess[index];
             } else {
                 var mess = item.message;
             }
             list += '<a id="eventUser" href="#" onclick="updateSelectedUser(' + inputName + ')">' + name + '</a>'
-            console.log(list)
             if (mess == 0) {
                 list += '\t' + '<button type="button" class="btn btn-xs btn-primary pull-right" onclick="initMessageModal(\'' + item.name + '\'); showModal(\'message\')"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span></button>'
             } else {
@@ -674,11 +671,8 @@ function toggleAttendingButton(clicked){
             localBorough.push(events[selectedEventId].borough);
             localNeighborhood.push(events[selectedEventId].neighborhood);
             localTel.push(events[selectedEventId].telephone);
-            var addMess = 0
+            var addMess = 0;
             localMess.push(addMess);
-
-            console.log("added new values: " + localEventNames); // debugging
-            console.log("added new values: " + localEventURLs); // debugging
 
             // Replaces stored object with local values
             store.set("userEvents", {
@@ -704,13 +698,8 @@ function toggleAttendingButton(clicked){
         $("#eventMessageStatus").show();
         $("#attendingButton").text("Mark as not attending");
         $("#attendingButton").removeClass( "btn-success" ).addClass( "btn-danger" );
-
-
-
-
     }
     else if ($("#attendingButton").text() == "Mark as not attending"){
-
         // Remove event from local copies
         var index = localEventNames.indexOf(events[selectedEventId].event_name);
         localEventNames.splice(index, 1);
@@ -728,7 +717,6 @@ function toggleAttendingButton(clicked){
         localNeighborhood.splice(index, 1);
         localTel.splice(index, 1);
         localMess.splice(index, 1);
-
         
         // Replaces stored object with local values
         store.set("userEvents", {
@@ -765,7 +753,7 @@ $(document).on("click", ".attendedEventURL", function () {
 });
 
 function updateMessage() {
-    var select = document.getElementById("messButt")
+    var select = document.getElementById("messButt");
     var val = select.options[select.selectedIndex].value;
     var index = localEventNames.indexOf(events[selectedEventId].event_name);
     if (val == "1") {
@@ -819,9 +807,9 @@ function updateMessage() {
 function updateMess2(eventName, val) {
     var index = localEventNames.indexOf(eventName);
     if (val == 0) {
-        localMess[index] = 0
+        localMess[index] = 0;
     } else {
-        localMess[index] = 1
+        localMess[index] = 1;
     }
     store.set("userEvents", {
         eventNames: localEventNames,
@@ -841,7 +829,7 @@ function updateMess2(eventName, val) {
         mess: localMess
     });
     toastr.success("Messaging preferences updated!");
-    initProfileModal()
+    initProfileModal();
 
 }
 
@@ -862,7 +850,7 @@ function initProfileModal(){
     var attendingHtml = '';
     names = storedEvents.eventNames;
     url = storedEvents.eventURLs;
-    var mess_array = storedEvents.mess
+    var mess_array = storedEvents.mess;
 
     if (selectedUserId == 1) {
         // Display each row of events being attended
@@ -914,9 +902,6 @@ function removeEvent(eventName) {
     localNeighborhood.splice(index, 1);
     localTel.splice(index, 1);
     localMess.splice(index, 1);
-
-    // storedEvents.eventNames = localEventNames; // Commented out bc not sure if this was intentional by @elisha 
-    // storedEvents.eventURLs = localEventNames;
     
     store.set("userEvents", {
         eventNames: localEventNames,
@@ -972,7 +957,6 @@ function replyToMessage(){
     $('#receivedMessageModal').animate({'height': '60%'}, { duration: 600, queue: false });
     $('#receivedMessageModal').animate({'top': '20%'}, { duration: 600, queue: false });
 }
-
 
 function sendResponse(){
     toastr.success("Sent reply to " + messageFrom[responseId].name + "!");
