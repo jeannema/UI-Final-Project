@@ -451,6 +451,11 @@ function addEvent(event, index){
 
     // on marker hover, display event category and title
     google.maps.event.addListener(markers[markers.length-1], 'mouseover', function() {
+        if (events[this.id].category == "spareTimes") {
+            events[this.id].category = "NYT Curated";
+        } else if (events[this.id].category == "forChildren") {
+            events[this.id].category = "Kid-Friendly";
+        }
         infoWindow.setContent("<b>" + events[this.id].category + "</b>: " + events[this.id].event_name);
         infoWindow.open(map, this);
         $(".gm-style-iw").next("div").hide();
