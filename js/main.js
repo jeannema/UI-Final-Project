@@ -19,6 +19,7 @@ var localZipcode;
 var localBorough;
 var localNeighborhood;
 var localTel;
+var localMess = [];
 var offset = 0;
 var listCounter = 1; // Used to number search results in infoWindow
 var selectedUserId;
@@ -46,7 +47,6 @@ $(document).ready(function(){
     /* **********Begin local storage implementation********** */
     
     //IF YOU WANT TO CLEAR ALL LOCAL STORAGE VALUES FOR DEBUGGING: store.clear();
-    
     // If there is no stored data, create storedEvents object
     if (store.get("userEvents") == null) {
         store.set("userEvents", {
@@ -63,7 +63,8 @@ $(document).ready(function(){
             zipcode: [],
             borough: [],
             neighborhood: [],
-            tel: []
+            tel: [],
+            mess: []
         });
     }
     storedEvents = store.get("userEvents");
@@ -135,6 +136,7 @@ function initLocalStorage() {
     localBorough = storedEvents.borough;
     localNeighborhood = storedEvents.neighborhood;
     localTel = storedEvents.tel;
+    localMess = storedEvents.mess;
 }
 
 // show modal
@@ -619,7 +621,12 @@ function generateAttendeeList(init, passedName){
             var list = '<li class="list-group-item">';
             var name = item.name;
             var inputName = "'" + name + "'"
-            var mess = item.message;
+            if (item.name == "Baymax") {
+                var index = localEventNames.indexOf(events[selectedEventId].event_name);
+                var mess = localMess[index]
+            } else {
+                var mess = item.message;
+            }
             list += '<a id="eventUser" href="#" onclick="updateSelectedUser(' + inputName + ')">' + name + '</a>'
             console.log(list)
             if (mess == 0) {
@@ -655,6 +662,8 @@ function toggleAttendingButton(clicked){
             localBorough.push(events[selectedEventId].borough);
             localNeighborhood.push(events[selectedEventId].neighborhood);
             localTel.push(events[selectedEventId].telephone);
+            var addMess = 0
+            localMess.push(addMess);
 
             console.log("added new values: " + localEventNames); // debugging
             console.log("added new values: " + localEventURLs); // debugging
@@ -674,7 +683,8 @@ function toggleAttendingButton(clicked){
                 zipcode: localZipcode,
                 borough: localBorough,
                 neighborhood: localNeighborhood,
-                tel: localTel
+                tel: localTel,
+                mess: localMess
             });
         }
         usersAttending.push(user1);
@@ -682,6 +692,9 @@ function toggleAttendingButton(clicked){
         $("#eventMessageStatus").show();
         $("#attendingButton").text("Mark as not attending");
         $("#attendingButton").removeClass( "btn-success" ).addClass( "btn-danger" );
+
+
+
 
     }
     else if ($("#attendingButton").text() == "Mark as not attending"){
@@ -702,6 +715,8 @@ function toggleAttendingButton(clicked){
         localBorough.splice(index, 1);
         localNeighborhood.splice(index, 1);
         localTel.splice(index, 1);
+        localMess.splice(Index, 1);
+
         
         // Replaces stored object with local values
         store.set("userEvents", {
@@ -718,7 +733,8 @@ function toggleAttendingButton(clicked){
             zipcode: localZipcode,
             borough: localBorough,
             neighborhood: localNeighborhood,
-            tel: localTel
+            tel: localTel,
+            mess: localMess
         });
         
         var index = usersAttending.indexOf(user1.name);
@@ -735,6 +751,64 @@ var i; // Global var for use in showEventsFromProfile(i)
 $(document).on("click", ".attendedEventURL", function () {
     showEventsFromProfile(parseInt($(this).attr("stuff")));
 });
+
+function updateMessage() {
+    var select = document.getElementById("messButt")
+    var val = select.options[select.selectedIndex].value
+    var index = localEventNames.indexOf(events[selectedEventId].event_name);
+
+    if (val == "1") {
+        if (index !== -1) {
+            localMess[index] = 1
+            store.set("userEvents", {
+                eventNames: localEventNames,
+                eventURLs: localEventURLs,
+                eventCategory: localEventCategory,
+                eventDateTime: localEventDateTime,
+                eventWebDescr: localEventWebDescr,
+                venueSite: localVenueSite,
+                venueName: localVenueName,
+                address: localAddress,
+                city: localCity,
+                state: localState,
+                zipcode: localZipcode,
+                borough: localBorough,
+                neighborhood: localNeighborhood,
+                tel: localTel,
+                mess: localMess
+            });
+        }
+    }
+    initEventModal();
+}
+
+function updateMess2(eventName, val) {
+    var index = localEventNames.indexOf(eventName);
+    if (val == 0) {
+        localMess[index] = 0
+    } else {
+        localMess[index] = 1
+    }
+    store.set("userEvents", {
+        eventNames: localEventNames,
+        eventURLs: localEventURLs,
+        eventCategory: localEventCategory,
+        eventDateTime: localEventDateTime,
+        eventWebDescr: localEventWebDescr,
+        venueSite: localVenueSite,
+        venueName: localVenueName,
+        address: localAddress,
+        city: localCity,
+        state: localState,
+        zipcode: localZipcode,
+        borough: localBorough,
+        neighborhood: localNeighborhood,
+        tel: localTel,
+        mess: localMess
+    });
+    initProfileModal()
+
+}
 
 function initProfileModal(){
     // open by calling showModal("profile") and setting selectedUserId to appropriate id; should be opened from eventModal
@@ -753,25 +827,28 @@ function initProfileModal(){
     var attendingHtml = '';
     names = storedEvents.eventNames;
     url = storedEvents.eventURLs;
+    var mess_array = storedEvents.mess
 
     if (selectedUserId == 1) {
-
-        if (user.message == 0) {
-            messageButton = '<form class="form-inline" role="form"><div class="form-group"><select class="form-control input-sm"><option>Message</option>';
-            messageButton += '<option>Do not Message</option></select></div><button type="message" class="btn btn-xs btn-primary pull-right">Update</button></form>';
-        } else {
-            messageButton = '<form class="form-inline" role="form"><div class="form-group"><select class="form-control input-sm"><option>Do Not Message</option>';
-            messageButton += '<option>Message</option></select></div><button type="message" class="btn btn-xs btn-primary pull-right">Update</button></form>';
-        }
-        
         // Display each row of events being attended
         i = 0;
         for (i in names) {
             attendingHtml += '<tr><td>' + '<a href="#" class="attendedEventURL" stuff="' + i + '">' + names[i]+ '</a></td><td>';
-            attendingHtml += messageButton;
+            var messageButton = ''
             inputEvent = "'" + names[i] + "'";
-            attendingHtml += '<td align = "pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="eventUser" href="#" style="color: #CC0000" onclick="removeEvent(' + inputEvent + ')">' + 'Remove Event' + '</a></td></tr>';
+            if (mess_array[i]== 0) {
+                messageButton = '<div class="form-group" style="display: inline;"><select class="form-control input-sm" id="messButt2">><option value="0">Message</option>';
+                messageButton += '<option value ="1">Do not Message</option></select></div><button type="message" onclick="updateMess2(' + inputEvent + ', 1)"'
+                messageButton += ' class="btn btn-xs btn-primary pull-right">Update</button></div>';
+            } else {
+                messageButton = '<div class="form-group" style="display: inline;"><select class="form-control input-sm" id="messButt3">><option value="0">Do Not Message</option>';
+                messageButton += '<option value="1">Message</option></select></div><button type="message" onclick="updateMess2(' + inputEvent + ', 0)"'
+                messageButton += ' class="btn btn-xs btn-primary pull-right">Update</button></div>';
+            }
+            attendingHtml += messageButton;
+            attendingHtml += '<td align = "pull-right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="eventUser" href="#" style="color: #CC0000" onclick="removeEvent(' + inputEvent + ')">' + 'Remove Event' + '</a></td></tr><br><br>';
         }
+
     } else {
         attendingHtml = '<ul class="list-group">';
         for (var i in names) {
@@ -801,6 +878,7 @@ function removeEvent(eventName) {
     localBorough.splice(index, 1);
     localNeighborhood.splice(index, 1);
     localTel.splice(index, 1);
+    localMess.splice(index, 1);
 
     // storedEvents.eventNames = localEventNames; // Commented out bc not sure if this was intentional by @elisha 
     // storedEvents.eventURLs = localEventNames;
@@ -819,7 +897,8 @@ function removeEvent(eventName) {
         zipcode: localZipcode,
         borough: localBorough,
         neighborhood: localNeighborhood,
-        tel: localTel
+        tel: localTel,
+        mess: localMess
     });
 
     initProfileModal();

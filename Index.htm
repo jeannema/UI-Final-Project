@@ -67,12 +67,13 @@
             <div id = "attendees" style = "width: 30%; float:right"></div>
             <h1 id="eventTitle"></h1><br>
             <div id="eventMessageStatus" style="display:none">
-                <form class="form-inline" role="form">
-                    <div class="form-group">
-                        <select class="form-control input-sm"><option>Message</option><option>Do not Message</option></select>
+                    <div class="form-group" style = "width: 30%; float:right; display: inline;">
+                        <select class="form-control input-sm" id="messButt">
+                            <option value="0">Message</option>
+                            <option value="1">Do not Message</option>
+                        </select>
+                        <button type="message" onclick="updateMessage()" class="btn btn-xs btn-primary pull-right">Update</button>
                     </div>
-                    <button type="message" class="btn btn-xs btn-primary pull-right">Update</button>
-                </form>
             </div>
             <br><br>
             <a href="#" id="attendingButton" class="btn btn-success">Mark as attending</a>
