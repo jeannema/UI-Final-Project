@@ -40,7 +40,8 @@ var usersAttending = [user2, user3, user4, user5, user6];
 var defaultusersAttending = [user2, user3, user4, user6]; // usersAttending gets set back to default for each new event modal
 
 // hard coded messages
-var messages = ["Hey! Did you want to meet up to go to the robotics show on Friday?", "That superhero expo looks really exciting!!!! I really need someone to go with!!!"];
+var messageBlurb = ["Hiro Hamada: Hey!...", "Fred: That superhe..."];
+var messages = ["Hiro Hamanda: Hey! Did you want to meet up to go to the robotics show on Friday?", "Fred: That superhero expo looks really exciting!!!! I really need someone to go with!!!"];
 var messageFrom = [user3, user4];
 var responseId;
 
@@ -74,6 +75,10 @@ $(document).ready(function(){
     
     /* **********End of local storage implementation********** */
     
+    for (var i = 0; i < messageBlurb.length; i++){
+        $("#messagesDropdown").append("<li><a href='#' onclick='initReceivedMessageModal(" + (i+1) + "); showModal(\"receivedMessage\")'>" + messageBlurb[i] + "</a></li>");
+    }
+                            
     // modal handlers                                       
     $("#searchLink").click(function(){
         showModal("search");  
@@ -944,7 +949,27 @@ function initMessageModal(name){
 function sendMessage(){
     var title = $("#messageTitle").text().split("Send a message to ");
     var name = title[title.length-1];
+    var message = $("#messageBody").val();
+    
+    var blurb = name + ": " + message;
+    if (blurb.length > 20)    messageBlurb.push(blurb.substr(0, 16) + "...");
+    else                        messageBlurb.push(blurb);
+    messages.push("You: " + message);
+    
+    var user;
+    if (name == "Baymax")               user = user1;
+    else if (name == "Honey Lemon")     user = user2;
+    else if (name == "Hiro Hamada")     user = user3;
+    else if (name == "Fred")            user = user4;
+    else if (name == "Go Go Tomago")    user = user5;
+    else if (name == "Wasabi")          user = user6;
+    messageFrom.push(user);
     toastr.success("Message sent to " + name + "!");
+    $("#messagesDropdown").html("");
+
+    for (var i = 0; i < messageBlurb.length; i++){
+        $("#messagesDropdown").append("<li><a href='#' onclick='initReceivedMessageModal(" + (i+1) + ");   showModal(\"receivedMessage\")'>" + messageBlurb[i] + "</a></li>");
+    }
     showModal("event", true);
 }
 
@@ -957,7 +982,7 @@ function initAboutModal(){
 function initReceivedMessageModal(index){
     responseId = index - 1;
     $("#receivedMessageTitle").text("Conversation with " + messageFrom[responseId].name);
-    $("#receivedMessageBody").html(messageFrom[responseId].name + ": " + messages[responseId]);
+    $("#receivedMessageBody").html(messages[responseId]);
 }
 
 function replyToMessage(){
